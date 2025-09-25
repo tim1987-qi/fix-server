@@ -1,6 +1,7 @@
 com/fixserver/FIXServerApplication.class
 com/fixserver/protocol/MessageType.class
 com/fixserver/session/HeartbeatManager$HeartbeatCallback.class
+com/fixserver/netty/NettyFIXClientHandler.class
 com/fixserver/session/HeartbeatManager$HeartbeatMonitor.class
 com/fixserver/session/HeartbeatManager$HeartbeatStats.class
 com/fixserver/client/FIXClientExample.class
@@ -9,12 +10,15 @@ com/fixserver/protocol/FieldDefinition$FieldInfo.class
 com/fixserver/core/FIXMessageImpl.class
 com/fixserver/session/FIXSession$Status.class
 com/fixserver/protocol/FIXValidator.class
+com/fixserver/netty/FIXMessageEncoder.class
 com/fixserver/store/MessageStore.class
 com/fixserver/store/MessageStoreImpl$MessageStoreException.class
 com/fixserver/client/FIXClient.class
 com/fixserver/session/SessionManager$SessionStatistics.class
+com/fixserver/netty/NettyFIXServer$1.class
 com/fixserver/protocol/FIXValidator$1.class
 com/fixserver/client/FIXClientConnectionHandler.class
+com/fixserver/netty/NettyFIXServer.class
 com/fixserver/replay/GapFillManager.class
 com/fixserver/store/InMemoryMessageStore$InMemoryAuditRecord.class
 com/fixserver/store/InMemoryMessageStore.class
@@ -37,11 +41,14 @@ com/fixserver/protocol/FIXProtocolHandler.class
 com/fixserver/store/entity/AuditRecordEntity$AuditEventType.class
 com/fixserver/session/SessionTimeoutHandler$TimeoutStats.class
 com/fixserver/store/MessageStoreImpl$MessageStatistics.class
+com/fixserver/netty/NettyFIXClientExample.class
 com/fixserver/replay/GapFillManager$SequenceResetResult.class
+com/fixserver/netty/NettyFIXClientExample$1.class
 com/fixserver/protocol/FIXValidator$ValidationResult.class
 com/fixserver/replay/GapFillManager$GapStatistics.class
 com/fixserver/session/SessionManager.class
 com/fixserver/session/SessionTimeoutHandler$TimeoutTask.class
+com/fixserver/netty/FIXMessageHandler.class
 com/fixserver/replay/MessageReplayService$ReplayStatistics.class
 com/fixserver/protocol/FIXParseException.class
 com/fixserver/client/FIXClientImpl.class
@@ -51,6 +58,8 @@ com/fixserver/replay/GapFillManager$SequenceGap.class
 com/fixserver/client/messages/OrderMessage$OrderType.class
 com/fixserver/server/FIXProtocolServer.class
 com/fixserver/client/messages/OrderMessage$Side.class
+com/fixserver/config/NettyConfiguration.class
+com/fixserver/netty/NettyFIXSession.class
 com/fixserver/replay/MessageReplayService$ReplayResult.class
 com/fixserver/client/messages/OrderMessage.class
 com/fixserver/client/FIXClientConfiguration.class
@@ -62,6 +71,7 @@ com/fixserver/store/repository/MessageRepository.class
 com/fixserver/session/FIXSessionImpl$1.class
 com/fixserver/protocol/FIXFormatException.class
 com/fixserver/store/entity/MessageEntity.class
+com/fixserver/netty/FIXMessageDecoder.class
 com/fixserver/session/HeartbeatManager.class
 com/fixserver/store/MessageStore$MessageDirection.class
 com/fixserver/protocol/FieldDefinition$FieldType.class

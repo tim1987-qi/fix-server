@@ -75,6 +75,13 @@
             <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
 
+        <!-- Netty for high-performance networking -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.100.Final</version>
+        </dependency>
+
         <!-- Lombok for reducing boilerplate -->
         <dependency>
             <groupId>org.projectlombok</groupId>

@@ -1,10 +1,12 @@
 /Users/qt/workspace/fix-server/src/test/java/com/fixserver/protocol/FIXProtocolHandlerTest.java
 /Users/qt/workspace/fix-server/src/test/java/com/fixserver/session/FIXSessionImplTest.java
 /Users/qt/workspace/fix-server/src/test/java/com/fixserver/replay/GapFillManagerTest.java
+/Users/qt/workspace/fix-server/src/test/java/com/fixserver/netty/NettyFIXServerIntegrationTest.java
 /Users/qt/workspace/fix-server/src/test/java/com/fixserver/client/FIXClientImplTest.java
 /Users/qt/workspace/fix-server/src/test/java/com/fixserver/protocol/FIXValidatorTest.java
 /Users/qt/workspace/fix-server/src/test/java/com/fixserver/client/messages/OrderMessageTest.java
 /Users/qt/workspace/fix-server/src/test/java/com/fixserver/store/MessageStoreImplTest.java
+/Users/qt/workspace/fix-server/src/test/java/com/fixserver/netty/NettyFIXServerTest.java
 /Users/qt/workspace/fix-server/src/test/java/com/fixserver/core/FIXMessageImplTest.java
 /Users/qt/workspace/fix-server/src/test/java/com/fixserver/protocol/MessageTypeTest.java
 /Users/qt/workspace/fix-server/src/test/java/com/fixserver/session/HeartbeatManagerTest.java

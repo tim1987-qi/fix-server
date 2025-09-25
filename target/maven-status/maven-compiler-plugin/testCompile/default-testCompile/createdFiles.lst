@@ -10,6 +10,8 @@ com/fixserver/store/MessageStoreImplTest.class
 com/fixserver/session/SessionStateTest.class
 com/fixserver/replay/MessageReplayServiceTest.class
 com/fixserver/client/FIXClientImplTest$1.class
+com/fixserver/netty/NettyFIXServerTest.class
 com/fixserver/client/messages/OrderMessageTest.class
+com/fixserver/netty/NettyFIXServerIntegrationTest.class
 com/fixserver/protocol/FIXProtocolHandlerTest.class
 com/fixserver/session/FIXSessionImplTest.class

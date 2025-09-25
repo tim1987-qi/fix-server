@@ -13,6 +13,20 @@ The FIX client provides a complete implementation of the FIX (Financial Informat
 - **Error Recovery**: Sequence gap detection and resend request handling
 - **Asynchronous Operations**: Non-blocking message sending and receiving
 
+## Client Implementations
+
+The FIX server provides **two client implementations** to connect to different server types:
+
+### 1. Traditional Socket Client
+- **Purpose**: Connect to traditional socket-based FIX servers (port 9878)
+- **Implementation**: `FIXClientImpl` with blocking I/O
+- **Best for**: Simple integrations, testing, lower connection counts
+
+### 2. High-Performance Netty Client  
+- **Purpose**: Connect to Netty-based FIX servers (port 9879)
+- **Implementation**: `NettyFIXClientExample` with non-blocking NIO
+- **Best for**: High-throughput scenarios, production environments, better performance
+
 ## Quick Start
 
 ### 1. Basic Client Usage
@@ -40,9 +54,11 @@ client.sendMessage(myOrder).get();
 client.disconnect().get();
 ```
 
-### 2. Running the Example Client
+### 2. Running the Example Clients
 
-The project includes an interactive example client that you can run:
+The project includes two interactive example clients:
+
+#### Traditional Socket Client
 
 **Linux/macOS:**
 ```bash
@@ -56,33 +72,116 @@ run-client.bat [host] [port] [senderCompId] [targetCompId]
 
 **Default values:**
 - Host: localhost
-- Port: 9876
+- Port: 9878 (socket server)
+- Sender CompID: CLIENT1
+- Target CompID: SERVER1
+
+#### High-Performance Netty Client
+
+**Linux/macOS:**
+```bash
+./run-netty-client.sh [host] [port] [senderCompId] [targetCompId]
+```
+
+**Windows:**
+```cmd
+run-netty-client.bat [host] [port] [senderCompId] [targetCompId]
+```
+
+**Default values:**
+- Host: localhost
+- Port: 9879 (Netty server)
 - Sender CompID: CLIENT1
 - Target CompID: SERVER1
 
 ### 3. Interactive Commands
 
-Once the client is running, you can use these commands:
-
+#### Traditional Socket Client Commands
 - `market AAPL buy 100` - Send market order to buy 100 shares of AAPL
 - `limit AAPL sell 50 150.00` - Send limit order to sell 50 shares at $150.00
 - `cancel ORDER_1 AAPL buy` - Cancel a previous order
 - `status ORDER_1 AAPL buy` - Get status of an order
 - `quit` - Exit the client
 
+#### Netty Client Commands
+- `market AAPL buy 100` - Send market order to buy 100 shares of AAPL
+- `limit MSFT sell 50 150.00` - Send limit order to sell 50 shares at $150.00
+- `heartbeat` - Send manual heartbeat message
+- `quit` - Exit the client
+
+Both clients provide real-time execution reports and proper FIX message handling.
+
+## Choosing the Right Client
+
+### Traditional Socket Client (`FIXClientImpl`)
+**Use When:**
+- Connecting to traditional FIX servers
+- Simple integration requirements
+- Lower connection volumes (< 50 concurrent)
+- Blocking I/O is acceptable
+- Easier debugging needed
+
+**Features:**
+- Comprehensive FIX protocol support
+- Built-in reconnection logic
+- Message validation and error handling
+- Sequence number management
+- Heartbeat automation
+
+### Netty Client (`NettyFIXClientExample`)
+**Use When:**
+- Connecting to high-performance Netty servers
+- High-throughput requirements
+- Low latency needs
+- Non-blocking I/O benefits desired
+- Production environments
+
+**Features:**
+- Event-driven architecture
+- Non-blocking I/O operations
+- Better resource utilization
+- Optimized for performance
+- Real-time message processing
+
+### Performance Comparison
+```
+Scenario                | Socket Client | Netty Client
+-----------------------|---------------|-------------
+Simple Testing         | Excellent     | Good
+Low Volume Trading     | Good          | Excellent
+High Volume Trading    | Fair          | Excellent
+Latency Sensitive      | Good          | Excellent
+Resource Usage         | Higher        | Lower
+```
+
 ## Configuration Options
 
 ### Basic Configuration
 
+#### Traditional Socket Client
 ```java
 FIXClientConfiguration config = FIXClientConfiguration.builder()
     .host("fix.server.com")           // Server hostname
-    .port(9876)                       // Server port
+    .port(9878)                       // Socket server port
     .senderCompId("MY_CLIENT")        // Your company ID
     .targetCompId("EXCHANGE")         // Target company ID
     .fixVersion("FIX.4.4")           // FIX version (default: FIX.4.4)
     .heartbeatInterval(30)            // Heartbeat interval in seconds
     .build();
+```
+
+#### Netty Client
+```java
+// Netty client is configured via constructor parameters
+NettyFIXClientExample client = new NettyFIXClientExample(
+    "fix.server.com",                 // Server hostname
+    9879,                             // Netty server port
+    "MY_CLIENT",                      // Sender CompID
+    "EXCHANGE"                        // Target CompID
+);
+
+// Connect and use
+client.connect();
 ```
 
 ### Advanced Configuration
@@ -175,6 +274,76 @@ client.setMessageHandler((message, client) -> {
             System.out.println("Received message: " + messageType);
     }
 });
+```
+
+## Netty Client Usage
+
+### Basic Netty Client Example
+
+```java
+public class MyNettyClient {
+    public static void main(String[] args) {
+        NettyFIXClientExample client = new NettyFIXClientExample(
+            "localhost", 9879, "CLIENT1", "SERVER1");
+        
+        try {
+            // Connect to server
+            client.connect();
+            
+            // Client will automatically handle logon and provide interactive session
+            // Or you can extend NettyFIXClientExample for programmatic usage
+            
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        } finally {
+            client.disconnect();
+        }
+    }
+}
+```
+
+### Custom Netty Client Implementation
+
+```java
+public class CustomNettyClient {
+    private EventLoopGroup group;
+    private Channel channel;
+    
+    public void connect(String host, int port) throws Exception {
+        group = new NioEventLoopGroup();
+        
+        Bootstrap bootstrap = new Bootstrap();
+        bootstrap.group(group)
+                .channel(NioSocketChannel.class)
+                .handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel ch) {
+                        ChannelPipeline pipeline = ch.pipeline();
+                        pipeline.addLast("fixDecoder", new FIXMessageDecoder());
+                        pipeline.addLast("fixEncoder", new FIXMessageEncoder());
+                        pipeline.addLast("clientHandler", new MyClientHandler());
+                    }
+                });
+        
+        ChannelFuture future = bootstrap.connect(host, port).sync();
+        channel = future.channel();
+    }
+    
+    public void sendMessage(String fixMessage) {
+        if (channel != null && channel.isActive()) {
+            channel.writeAndFlush(fixMessage);
+        }
+    }
+    
+    public void disconnect() {
+        if (channel != null) {
+            channel.close();
+        }
+        if (group != null) {
+            group.shutdownGracefully();
+        }
+    }
+}
 ```
 
 ## Sending Messages

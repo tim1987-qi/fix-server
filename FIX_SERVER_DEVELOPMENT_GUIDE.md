@@ -19,17 +19,23 @@ This FIX Server is a Java-based implementation of the Financial Information eXch
 
 ### Key Features
 - FIX 4.4 protocol support
+- **Dual server implementations:**
+  - Traditional socket-based server (blocking I/O)
+  - High-performance Netty-based server (non-blocking NIO)
 - Multi-client session management
 - Message persistence and replay
 - Comprehensive validation
 - Extensible architecture
 - Built-in client library
 - Production-ready monitoring
+- Event-driven message processing (Netty)
+- Configurable thread pools and connection settings
 
 ## Architecture
 
-The FIX Server follows a layered architecture pattern:
+The FIX Server follows a layered architecture pattern with two connection implementations:
 
+### Traditional Socket-Based Server (Port 9878)
 ```
 ┌─────────────────────────────────────────┐
 │              Client Layer               │
@@ -44,6 +50,39 @@ The FIX Server follows a layered architecture pattern:
 ┌─────────────────▼───────────────────────┐
 │            Session Layer                │
 │      (Session State Management)         │
+└─────────────────┬───────────────────────┘
+                  │
+┌─────────────────▼───────────────────────┐
+│            Business Layer               │
+│        (Order Processing Logic)         │
+└─────────────────┬───────────────────────┘
+                  │
+┌─────────────────▼───────────────────────┐
+│            Storage Layer                │
+│      (Message & Session Persistence)    │
+└─────────────────────────────────────────┘
+```
+
+### High-Performance Netty-Based Server (Port 9879)
+```
+┌─────────────────────────────────────────┐
+│              Client Layer               │
+│         (Netty NIO Channels)            │
+└─────────────────┬───────────────────────┘
+                  │
+┌─────────────────▼───────────────────────┐
+│            Netty Pipeline               │
+│    (Decoder → Handler → Encoder)        │
+└─────────────────┬───────────────────────┘
+                  │
+┌─────────────────▼───────────────────────┐
+│         Event Loop Groups               │
+│    (Boss Group + Worker Group)          │
+└─────────────────┬───────────────────────┘
+                  │
+┌─────────────────▼───────────────────────┐
+│            Protocol Layer               │
+│     (FIX Message Parsing/Formatting)    │
 └─────────────────┬───────────────────────┘
                   │
 ┌─────────────────▼───────────────────────┐
@@ -120,6 +159,46 @@ session.sendMessage(responseMessage);
 session.handleHeartbeat();
 ```
 
+### 5. Netty-Based Server (`NettyFIXServer`)
+
+**Location**: `src/main/java/com/fixserver/netty/NettyFIXServer.java`
+
+High-performance, non-blocking I/O server implementation using Netty framework.
+
+**Key Features**:
+- Event-driven architecture with NIO
+- Configurable boss and worker thread pools
+- Built-in backpressure handling
+- Channel pipeline with custom codecs
+- Better scalability for high-throughput scenarios
+
+```java
+// Netty server configuration
+ServerBootstrap bootstrap = new ServerBootstrap();
+bootstrap.group(bossGroup, workerGroup)
+        .channel(NioServerSocketChannel.class)
+        .childHandler(new ChannelInitializer<SocketChannel>() {
+            @Override
+            protected void initChannel(SocketChannel ch) {
+                ChannelPipeline pipeline = ch.pipeline();
+                pipeline.addLast("fixDecoder", new FIXMessageDecoder());
+                pipeline.addLast("fixEncoder", new FIXMessageEncoder());
+                pipeline.addLast("fixHandler", new FIXMessageHandler(protocolHandler));
+            }
+        });
+```
+
+### 6. FIX Message Codec (Netty)
+
+**Decoder**: `src/main/java/com/fixserver/netty/FIXMessageDecoder.java`
+- Handles FIX message framing and parsing
+- Accumulates bytes until complete message is received
+- Validates message structure (BeginString, BodyLength, Checksum)
+
+**Encoder**: `src/main/java/com/fixserver/netty/FIXMessageEncoder.java`
+- Converts FIX message strings to bytes for transmission
+- Handles proper UTF-8 encoding
+
 ## Development Setup
 
 ### Prerequisites
@@ -158,8 +237,22 @@ source setup-env.sh
 ```yaml
 fix:
   server:
-    port: 9878
+    port: 9878                    # Traditional socket server port
     max-sessions: 100
+    
+    # Netty-based server configuration
+    netty:
+      enabled: true               # Enable/disable Netty server
+      port: 9879                  # Netty server port
+      boss-threads: 1             # Acceptor threads
+      worker-threads: 0           # I/O threads (0 = auto)
+      backlog: 128                # Connection backlog
+      receive-buffer-size: 32768  # SO_RCVBUF
+      send-buffer-size: 32768     # SO_SNDBUF
+      keep-alive: true            # SO_KEEPALIVE
+      tcp-no-delay: true          # TCP_NODELAY
+      max-sessions: 1000          # Max concurrent sessions
+    
     tls:
       enabled: false
 
@@ -531,6 +624,42 @@ public void testConcurrentClients() throws Exception {
 }
 ```
 
+### Testing Netty Implementation
+
+**Run Netty Client Example**:
+```bash
+# Using shell script
+./run-netty-client.sh localhost 9879 CLIENT1 SERVER1
+
+# Using Java directly
+java -cp "target/classes:$(./mvnw dependency:build-classpath -Dmdep.outputFile=/dev/stdout -q)" \
+     com.fixserver.netty.NettyFIXClientExample localhost 9879 CLIENT1 SERVER1
+```
+
+**Netty Performance Testing**:
+```java
+@Test
+public void testNettyServerPerformance() throws Exception {
+    // Connect multiple clients to Netty server (port 9879)
+    int clientCount = 100;
+    CountDownLatch connectLatch = new CountDownLatch(clientCount);
+    
+    for (int i = 0; i < clientCount; i++) {
+        new Thread(() -> {
+            try {
+                NettyFIXClientExample client = new NettyFIXClientExample(
+                    "localhost", 9879, "CLIENT" + Thread.currentThread().getId(), "SERVER1");
+                client.connect();
+            } finally {
+                connectLatch.countDown();
+            }
+        }).start();
+    }
+    
+    assertTrue(connectLatch.await(30, TimeUnit.SECONDS));
+}
+```
+
 ## Deployment
 
 ### Production Configuration
@@ -733,6 +862,44 @@ spring:
       max-lifetime: 1800000
 ```
 
+## Choosing Between Socket and Netty Implementations
+
+### Traditional Socket Server (Port 9878)
+**Use When:**
+- Simple deployment requirements
+- Lower concurrent connection count (< 100 clients)
+- Blocking I/O is acceptable
+- Easier debugging and troubleshooting needed
+
+**Characteristics:**
+- One thread per connection
+- Blocking I/O operations
+- Simpler code structure
+- Lower memory overhead per connection
+
+### Netty Server (Port 9879)
+**Use When:**
+- High concurrent connection count (> 100 clients)
+- Low latency requirements
+- High throughput scenarios
+- Non-blocking I/O benefits needed
+
+**Characteristics:**
+- Event-driven, non-blocking I/O
+- Configurable thread pools
+- Better resource utilization
+- Higher throughput and scalability
+
+### Performance Comparison
+```
+Concurrent Connections | Socket Server | Netty Server
+----------------------|---------------|-------------
+1-50 clients          | Good          | Excellent
+51-200 clients        | Fair          | Excellent  
+201-1000 clients      | Poor          | Excellent
+1000+ clients         | Not Recommended | Good
+```
+
 ## Best Practices
 
 1. **Always validate messages** before processing
@@ -745,6 +912,9 @@ spring:
 8. **Test thoroughly** with various message scenarios
 9. **Follow FIX protocol specifications** strictly
 10. **Document custom extensions** clearly
+11. **Choose appropriate server implementation** based on requirements
+12. **Configure Netty thread pools** based on expected load
+13. **Monitor both servers** if running simultaneously
 
 ## Resources
 

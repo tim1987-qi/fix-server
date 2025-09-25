@@ -69,6 +69,22 @@ fix:
     session-timeout: 120
     message-buffer-size: 8192
     
+    # Netty-based server configuration
+    netty:
+      enabled: true
+      port: 9879
+      boss-threads: 1
+      worker-threads: 0  # 0 = use default (2 * CPU cores)
+      backlog: 128
+      receive-buffer-size: 32768  # 32KB
+      send-buffer-size: 32768     # 32KB
+      keep-alive: true
+      tcp-no-delay: true
+      reuse-address: true
+      session-timeout-seconds: 300    # 5 minutes
+      heartbeat-interval-seconds: 30
+      max-sessions: 1000
+    
   tls:
     enabled: true
     port: 9879
