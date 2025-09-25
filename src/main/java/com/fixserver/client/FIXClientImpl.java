@@ -131,6 +131,7 @@ public class FIXClientImpl implements FIXClient {
         log.info("Sending logon message");
         
         FIXMessage logonMessage = new FIXMessageImpl();
+        logonMessage.setField(FIXMessage.BEGIN_STRING, "FIX.4.4");
         logonMessage.setField(FIXMessage.MESSAGE_TYPE, MessageType.LOGON.getValue());
         logonMessage.setField(FIXMessage.SENDER_COMP_ID, config.getSenderCompId());
         logonMessage.setField(FIXMessage.TARGET_COMP_ID, config.getTargetCompId());
@@ -204,6 +205,7 @@ public class FIXClientImpl implements FIXClient {
         log.info("Sending logout message: {}", reason);
         
         FIXMessage logoutMessage = new FIXMessageImpl();
+        logoutMessage.setField(FIXMessage.BEGIN_STRING, "FIX.4.4");
         logoutMessage.setField(FIXMessage.MESSAGE_TYPE, MessageType.LOGOUT.getValue());
         logoutMessage.setField(FIXMessage.SENDER_COMP_ID, config.getSenderCompId());
         logoutMessage.setField(FIXMessage.TARGET_COMP_ID, config.getTargetCompId());
@@ -300,16 +302,21 @@ public class FIXClientImpl implements FIXClient {
                 
                 messageBuffer.append((char) ch);
                 
-                // Check for complete message (ends with SOH)
+                // Check for complete message (ends with SOH after checksum field)
                 if (ch == '\u0001') {
-                    String messageString = messageBuffer.toString();
-                    messageBuffer.setLength(0);
+                    String currentMessage = messageBuffer.toString();
                     
-                    try {
-                        processIncomingMessage(messageString);
-                    } catch (Exception e) {
-                        log.error("Error processing incoming message: {}", messageString.replace('\u0001', '|'), e);
+                    // Check if this is a complete FIX message by looking for checksum field at the end
+                    if (isCompleteFixMessage(currentMessage)) {
+                        messageBuffer.setLength(0);
+                        
+                        try {
+                            processIncomingMessage(currentMessage);
+                        } catch (Exception e) {
+                            log.error("Error processing incoming message: {}", currentMessage.replace('\u0001', '|'), e);
+                        }
                     }
+                    // If not complete, continue reading more data
                 }
             }
         } catch (Exception e) {
@@ -416,6 +423,7 @@ public class FIXClientImpl implements FIXClient {
         
         // Send heartbeat response
         FIXMessage heartbeat = new FIXMessageImpl();
+        heartbeat.setField(FIXMessage.BEGIN_STRING, "FIX.4.4");
         heartbeat.setField(FIXMessage.MESSAGE_TYPE, MessageType.HEARTBEAT.getValue());
         heartbeat.setField(FIXMessage.SENDER_COMP_ID, config.getSenderCompId());
         heartbeat.setField(FIXMessage.TARGET_COMP_ID, config.getTargetCompId());
@@ -456,6 +464,7 @@ public class FIXClientImpl implements FIXClient {
     
     private void sendHeartbeat() throws Exception {
         FIXMessage heartbeat = new FIXMessageImpl();
+        heartbeat.setField(FIXMessage.BEGIN_STRING, "FIX.4.4");
         heartbeat.setField(FIXMessage.MESSAGE_TYPE, MessageType.HEARTBEAT.getValue());
         heartbeat.setField(FIXMessage.SENDER_COMP_ID, config.getSenderCompId());
         heartbeat.setField(FIXMessage.TARGET_COMP_ID, config.getTargetCompId());
@@ -470,6 +479,7 @@ public class FIXClientImpl implements FIXClient {
         String testReqId = "TEST_" + System.currentTimeMillis();
         
         FIXMessage testRequest = new FIXMessageImpl();
+        testRequest.setField(FIXMessage.BEGIN_STRING, "FIX.4.4");
         testRequest.setField(FIXMessage.MESSAGE_TYPE, MessageType.TEST_REQUEST.getValue());
         testRequest.setField(FIXMessage.SENDER_COMP_ID, config.getSenderCompId());
         testRequest.setField(FIXMessage.TARGET_COMP_ID, config.getTargetCompId());
@@ -501,6 +511,43 @@ public class FIXClientImpl implements FIXClient {
         this.connectionHandler = handler;
     }
     
+    /**
+     * Checks if the current buffer contains a complete FIX message.
+     * A complete FIX message should have BeginString, BodyLength, and end with Checksum field.
+     */
+    private boolean isCompleteFixMessage(String messageBuffer) {
+        if (messageBuffer == null || messageBuffer.isEmpty()) {
+            return false;
+        }
+        
+        // Split by SOH to get fields
+        String[] fields = messageBuffer.split("\u0001");
+        if (fields.length < 4) { // At minimum: BeginString, BodyLength, MessageType, Checksum
+            return false;
+        }
+        
+        // Check if message starts with BeginString (tag 8)
+        if (!fields[0].startsWith("8=")) {
+            return false;
+        }
+        
+        // Check if second field is BodyLength (tag 9)
+        if (fields.length < 2 || !fields[1].startsWith("9=")) {
+            return false;
+        }
+        
+        // Check if the last non-empty field is Checksum (tag 10)
+        String lastField = null;
+        for (int i = fields.length - 1; i >= 0; i--) {
+            if (!fields[i].isEmpty()) {
+                lastField = fields[i];
+                break;
+            }
+        }
+        
+        return lastField != null && lastField.startsWith("10=");
+    }
+
     /**
      * Shuts down the client and releases all resources.
      */

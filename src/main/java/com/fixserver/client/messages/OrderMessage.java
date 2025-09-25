@@ -93,6 +93,7 @@ public class OrderMessage {
                                           BigDecimal quantity, OrderType orderType, 
                                           BigDecimal price, TimeInForce timeInForce) {
         FIXMessage message = new FIXMessageImpl();
+        message.setField(FIXMessage.BEGIN_STRING, "FIX.4.4");
         message.setField(FIXMessage.MESSAGE_TYPE, MessageType.NEW_ORDER_SINGLE.getValue());
         
         // Required fields
@@ -152,6 +153,7 @@ public class OrderMessage {
     public static FIXMessage orderCancelRequest(String clientOrderId, String originalClientOrderId,
                                                String symbol, Side side) {
         FIXMessage message = new FIXMessageImpl();
+        message.setField(FIXMessage.BEGIN_STRING, "FIX.4.4");
         message.setField(FIXMessage.MESSAGE_TYPE, MessageType.ORDER_CANCEL_REQUEST.getValue());
         
         message.setField(11, clientOrderId);           // ClOrdID
@@ -175,6 +177,7 @@ public class OrderMessage {
     public static FIXMessage orderStatusRequest(String clientOrderId, String originalClientOrderId,
                                                String symbol, Side side) {
         FIXMessage message = new FIXMessageImpl();
+        message.setField(FIXMessage.BEGIN_STRING, "FIX.4.4");
         message.setField(FIXMessage.MESSAGE_TYPE, MessageType.ORDER_STATUS_REQUEST.getValue());
         
         message.setField(11, clientOrderId);           // ClOrdID
