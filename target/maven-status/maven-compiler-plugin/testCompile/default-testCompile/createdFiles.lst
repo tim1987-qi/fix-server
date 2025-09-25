@@ -1,0 +1,15 @@
+com/fixserver/FIXServerApplicationTest.class
+com/fixserver/core/FIXMessageImplTest.class
+com/fixserver/session/SessionTimeoutHandlerTest.class
+com/fixserver/client/FIXClientImplTest.class
+com/fixserver/session/HeartbeatManagerTest.class
+com/fixserver/protocol/FIXValidatorTest.class
+com/fixserver/protocol/MessageTypeTest.class
+com/fixserver/replay/GapFillManagerTest.class
+com/fixserver/store/MessageStoreImplTest.class
+com/fixserver/session/SessionStateTest.class
+com/fixserver/replay/MessageReplayServiceTest.class
+com/fixserver/client/FIXClientImplTest$1.class
+com/fixserver/client/messages/OrderMessageTest.class
+com/fixserver/protocol/FIXProtocolHandlerTest.class
+com/fixserver/session/FIXSessionImplTest.class
