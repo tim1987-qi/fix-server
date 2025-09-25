@@ -1,0 +1,46 @@
+15:38:40.013 [main] INFO com.fixserver.client.FIXClientExample - Starting FIX Client Example
+15:38:40.016 [main] INFO com.fixserver.client.FIXClientExample - Connecting to localhost:9876 as CLIENT1 -> SERVER1
+15:38:40.085 [FIXClient-CLIENT1] INFO com.fixserver.client.FIXClientImpl - Connecting to FIX server at localhost:9876
+15:38:40.106 [FIXClient-CLIENT1] ERROR com.fixserver.client.FIXClientImpl - Failed to connect to FIX server
+java.net.ConnectException: Connection refused (Connection refused)
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at com.fixserver.client.FIXClientImpl.doConnect(FIXClientImpl.java:103)
+	at com.fixserver.client.FIXClientImpl.lambda$connect$2(FIXClientImpl.java:90)
+	at java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1626)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+15:38:40.106 [main] ERROR com.fixserver.client.FIXClientExample - Error running client
+java.util.concurrent.ExecutionException: java.lang.RuntimeException: com.fixserver.client.FIXClientException: Connection failed
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:357)
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:1915)
+	at com.fixserver.client.FIXClientExample.main(FIXClientExample.java:116)
+Caused by: java.lang.RuntimeException: com.fixserver.client.FIXClientException: Connection failed
+	at com.fixserver.client.FIXClientImpl.lambda$connect$2(FIXClientImpl.java:93)
+	at java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1626)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: com.fixserver.client.FIXClientException: Connection failed
+	... 5 common frames omitted
+Caused by: java.net.ConnectException: Connection refused (Connection refused)
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at com.fixserver.client.FIXClientImpl.doConnect(FIXClientImpl.java:103)
+	at com.fixserver.client.FIXClientImpl.lambda$connect$2(FIXClientImpl.java:90)
+	... 4 common frames omitted
+15:38:40.107 [FIXClient-CLIENT1] INFO com.fixserver.client.FIXClientImpl - Disconnecting from FIX server: Client requested disconnect
+15:38:40.107 [FIXClient-CLIENT1] INFO com.fixserver.client.FIXClientExample - Disconnected from FIX server: Client requested disconnect
+15:38:40.107 [FIXClient-CLIENT1] INFO com.fixserver.client.FIXClientImpl - Disconnected from FIX server
+15:38:40.107 [FIXClient-CLIENT1] INFO com.fixserver.client.FIXClientImpl - Disconnecting from FIX server: Client requested disconnect
+15:38:40.107 [FIXClient-CLIENT1] INFO com.fixserver.client.FIXClientExample - Disconnected from FIX server: Client requested disconnect
+15:38:40.107 [FIXClient-CLIENT1] INFO com.fixserver.client.FIXClientImpl - Disconnected from FIX server

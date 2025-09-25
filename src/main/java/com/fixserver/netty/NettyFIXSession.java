@@ -23,74 +23,74 @@ import java.util.concurrent.atomic.AtomicLong;
 @Getter
 @Setter
 public class NettyFIXSession {
-    
+
     private final String sessionId;
     private final ChannelHandlerContext channelContext;
     private final LocalDateTime createdTime;
-    
+
     private boolean loggedOn = false;
     private LocalDateTime lastActivity;
     private final AtomicInteger incomingSeqNum = new AtomicInteger(1);
     private final AtomicInteger outgoingSeqNum = new AtomicInteger(1);
     private final AtomicLong messagesReceived = new AtomicLong(0);
     private final AtomicLong messagesSent = new AtomicLong(0);
-    
+
     public NettyFIXSession(String sessionId, ChannelHandlerContext channelContext) {
         this.sessionId = sessionId;
         this.channelContext = channelContext;
         this.createdTime = LocalDateTime.now();
         this.lastActivity = LocalDateTime.now();
     }
-    
+
     /**
      * Updates the last activity timestamp.
      */
     public void updateLastActivity() {
         this.lastActivity = LocalDateTime.now();
     }
-    
+
     /**
      * Gets the next incoming sequence number.
      */
     public int getNextIncomingSeqNum() {
         return incomingSeqNum.getAndIncrement();
     }
-    
+
     /**
      * Gets the next outgoing sequence number.
      */
     public int getNextOutgoingSeqNum() {
         return outgoingSeqNum.getAndIncrement();
     }
-    
+
     /**
      * Increments the messages received counter.
      */
     public void incrementMessagesReceived() {
         messagesReceived.incrementAndGet();
     }
-    
+
     /**
      * Increments the messages sent counter.
      */
     public void incrementMessagesSent() {
         messagesSent.incrementAndGet();
     }
-    
+
     /**
      * Returns the client's remote address.
      */
     public String getRemoteAddress() {
         return channelContext.channel().remoteAddress().toString();
     }
-    
+
     /**
      * Returns whether the channel is active.
      */
     public boolean isActive() {
         return channelContext.channel().isActive();
     }
-    
+
     /**
      * Returns session statistics as a string.
      */
@@ -98,7 +98,7 @@ public class NettyFIXSession {
         return String.format("Session[%s] - LoggedOn: %s, Active: %s, MsgRecv: %d, MsgSent: %d, LastActivity: %s",
                 sessionId, loggedOn, isActive(), messagesReceived.get(), messagesSent.get(), lastActivity);
     }
-    
+
     @Override
     public String toString() {
         return String.format("NettyFIXSession{sessionId='%s', loggedOn=%s, active=%s, remote=%s}",

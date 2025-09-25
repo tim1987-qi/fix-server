@@ -1,0 +1,107 @@
+Listening for transport dt_socket at address: 5005
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.fixserver:fix-server >----------------------
+[INFO] Building FIX Server 1.0.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot-maven-plugin:2.7.18:run (default-cli) > test-compile @ fix-server >>>
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.8.8:prepare-agent (default) @ fix-server ---
+[INFO] argLine set to -javaagent:/Users/qt/.m2/repository/org/jacoco/org.jacoco.agent/0.8.8/org.jacoco.agent-0.8.8-runtime.jar=destfile=/Users/qt/workspace/fix-server/target/jacoco.exec
+[INFO] 
+[INFO] --- maven-resources-plugin:3.2.0:resources (default-resources) @ fix-server ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 3 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.8.1:compile (default-compile) @ fix-server ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:3.2.0:testResources (default-testResources) @ fix-server ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.8.1:testCompile (default-testCompile) @ fix-server ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] <<< spring-boot-maven-plugin:2.7.18:run (default-cli) < test-compile @ fix-server <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot-maven-plugin:2.7.18:run (default-cli) @ fix-server ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::               (v2.7.18)
+
+2025-09-25 15:26:33 [main] INFO  com.fixserver.FIXServerApplication - Starting FIXServerApplication using Java 1.8.0_221 on QTdeMacBook-Pro.local with PID 24367 (/Users/qt/workspace/fix-server/target/classes started by qt in /Users/qt/workspace/fix-server)
+2025-09-25 15:26:33 [main] DEBUG com.fixserver.FIXServerApplication - Running with Spring Boot v2.7.18, Spring v5.3.31
+2025-09-25 15:26:33 [main] INFO  com.fixserver.FIXServerApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-25 15:26:35 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-09-25 15:26:35 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-25 15:26:35 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
+2025-09-25 15:26:35 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-25 15:26:35 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1914 ms
+2025-09-25 15:26:35 [main] INFO  c.f.config.MessageStoreConfiguration - Creating InMemoryMessageStore - database persistence is disabled
+2025-09-25 15:26:35 [main] WARN  c.f.config.MessageStoreConfiguration - Using in-memory storage: all messages will be lost on application restart
+2025-09-25 15:26:35 [main] INFO  c.f.config.MessageStoreConfiguration - To enable database persistence, uncomment database dependencies in pom.xml and application.yml
+2025-09-25 15:26:36 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 4 endpoint(s) beneath base path '/actuator'
+2025-09-25 15:26:36 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2025-09-25 15:26:36 [main] INFO  com.fixserver.FIXServerApplication - Started FIXServerApplication in 4.293 seconds (JVM running for 5.002)
+2025-09-25 15:26:36 [main] INFO  com.fixserver.FIXServerApplication - === FIX Server Application Started Successfully ===
+2025-09-25 15:26:36 [main] INFO  com.fixserver.FIXServerApplication - Server is ready to accept FIX connections
+2025-09-25 15:26:36 [main] INFO  com.fixserver.FIXServerApplication - Monitoring endpoints available at /actuator/health
+2025-09-25 15:26:36 [main] INFO  com.fixserver.FIXServerApplication - Metrics available at /actuator/prometheus
+2025-09-25 15:26:36 [main] INFO  com.fixserver.FIXServerApplication - Application version: null
+2025-09-25 15:26:36 [main] INFO  com.fixserver.FIXServerApplication - Configuration Summary:
+2025-09-25 15:26:36 [main] INFO  com.fixserver.FIXServerApplication - - Max concurrent sessions: configurable via fix.server.max-sessions
+2025-09-25 15:26:36 [main] INFO  com.fixserver.FIXServerApplication - - TLS enabled: configurable via fix.server.tls.enabled
+2025-09-25 15:26:36 [main] INFO  com.fixserver.FIXServerApplication - - Database: PostgreSQL with connection pooling
+2025-09-25 15:26:36 [main] INFO  com.fixserver.FIXServerApplication - - Monitoring: Prometheus metrics enabled
+2025-09-25 15:26:36 [main] INFO  com.fixserver.FIXServerApplication - For detailed configuration, check application.yml
+2025-09-25 15:26:36 [main] INFO  com.fixserver.netty.NettyFIXServer - Netty FIX Server started on port 9879 with 1 boss threads and default worker threads
+2025-09-25 15:26:36 [main] INFO  com.fixserver.netty.NettyFIXServer - Server channel: [id: 0xe27f3676, L:/0.0.0.0:9879]
+2025-09-25 15:26:36 [main] INFO  c.fixserver.server.FIXProtocolServer - FIX Protocol Server started on port 9878
+2025-09-25 15:26:36 [main] INFO  c.fixserver.server.FIXProtocolServer - Waiting for FIX client connections...
+2025-09-25 15:36:50 [nioEventLoopGroup-3-1] INFO  c.fixserver.netty.FIXMessageHandler - New FIX client connected: /127.0.0.1:54538
+2025-09-25 15:36:50 [nioEventLoopGroup-3-1] DEBUG c.fixserver.netty.FIXMessageDecoder - Decoded FIX message: 8=FIX.4.4|9=71|34=1|35=A|49=CLIENT1|52=2025-09-25T15:36:50.506|56=SERVER1|98=0|108=30|10=127|
+2025-09-25 15:36:50 [nioEventLoopGroup-3-1] DEBUG c.fixserver.netty.FIXMessageHandler - Received raw message from /127.0.0.1:54538: 8=FIX.4.4|9=71|34=1|35=A|49=CLIENT1|52=2025-09-25T15:36:50.506|56=SERVER1|98=0|108=30|10=127|
+2025-09-25 15:36:50 [nioEventLoopGroup-3-1] DEBUG c.f.protocol.FIXProtocolHandler - Parsing FIX message: 8=FIX.4.4|9=71|34=1|35=A|49=CLIENT1|52=2025-09-25T15:36:50.506|56=SERVER1|98=0|108=30|10=127|
+2025-09-25 15:36:50 [nioEventLoopGroup-3-1] DEBUG c.f.protocol.FIXProtocolHandler - Successfully parsed message: FIXMessage{type=A, sender=CLIENT1, target=SERVER1, seqNum=1}
+2025-09-25 15:36:50 [nioEventLoopGroup-3-1] INFO  c.fixserver.netty.FIXMessageHandler - Received FIX message from /127.0.0.1:54538: Type=A, Sender=CLIENT1, Target=SERVER1
+2025-09-25 15:36:50 [nioEventLoopGroup-3-1] DEBUG c.fixserver.netty.FIXMessageEncoder - Encoded FIX message: 8=FIX.4.4|9=71|34=1|35=A|49=SERVER1|52=2025-09-25T15:36:50.932|56=CLIENT1|98=0|108=30|10=130| (93 bytes)
+2025-09-25 15:36:50 [nioEventLoopGroup-3-1] DEBUG c.fixserver.netty.FIXMessageHandler - Sent FIX message: 8=FIX.4.4|9=71|34=1|35=A|49=SERVER1|52=2025-09-25T15:36:50.932|56=CLIENT1|98=0|108=30|10=130|
+2025-09-25 15:36:50 [nioEventLoopGroup-3-1] INFO  c.fixserver.netty.FIXMessageHandler - Client /127.0.0.1:54538 logged on with session CLIENT1-SERVER1
+2025-09-25 15:39:27 [pool-4-thread-1] INFO  c.fixserver.server.FIXProtocolServer - Accepted FIX client connection from /127.0.0.1:54685
+2025-09-25 15:39:27 [pool-4-thread-2] INFO  c.fixserver.server.FIXProtocolServer - Handling FIX client connection from /127.0.0.1:54685
+2025-09-25 15:39:27 [pool-4-thread-2] DEBUG c.f.protocol.FIXProtocolHandler - Parsing FIX message: 8=FIX.4.4|9=71|34=1|35=A|49=CLIENT1|52=2025-09-25T15:39:27.908|56=SERVER1|98=0|108=30|10=140|
+2025-09-25 15:39:27 [pool-4-thread-2] DEBUG c.f.protocol.FIXProtocolHandler - Successfully parsed message: FIXMessage{type=A, sender=CLIENT1, target=SERVER1, seqNum=1}
+2025-09-25 15:39:27 [pool-4-thread-2] INFO  c.fixserver.server.FIXProtocolServer - Received FIX message from /127.0.0.1:54685: Type=A, Sender=CLIENT1, Target=SERVER1
+2025-09-25 15:39:27 [pool-4-thread-2] INFO  c.fixserver.server.FIXProtocolServer - Sent logon response to session CLIENT1-SERVER1: 8=FIX.4.4|9=71|34=1|35=A|49=SERVER1|52=2025-09-25T15:39:27.986|56=CLIENT1|98=0|108=30|10=146|
+2025-09-25 15:39:27 [pool-4-thread-2] INFO  c.fixserver.server.FIXProtocolServer - Client /127.0.0.1:54685 logged on with session CLIENT1-SERVER1
+2025-09-25 15:43:13 [nioEventLoopGroup-3-2] INFO  c.fixserver.netty.FIXMessageHandler - New FIX client connected: /127.0.0.1:54880
+2025-09-25 15:43:13 [nioEventLoopGroup-3-2] DEBUG c.fixserver.netty.FIXMessageDecoder - Decoded FIX message: 8=FIX.4.4|9=68|35=A|49=TESTCLIENT|56=SERVER1|34=1|52=20250925-15:43:13|98=0|108=30|10=071|
+2025-09-25 15:43:13 [nioEventLoopGroup-3-2] DEBUG c.fixserver.netty.FIXMessageHandler - Received raw message from /127.0.0.1:54880: 8=FIX.4.4|9=68|35=A|49=TESTCLIENT|56=SERVER1|34=1|52=20250925-15:43:13|98=0|108=30|10=071|
+2025-09-25 15:43:13 [nioEventLoopGroup-3-2] DEBUG c.f.protocol.FIXProtocolHandler - Parsing FIX message: 8=FIX.4.4|9=68|35=A|49=TESTCLIENT|56=SERVER1|34=1|52=20250925-15:43:13|98=0|108=30|10=071|
+2025-09-25 15:43:13 [nioEventLoopGroup-3-2] DEBUG c.f.protocol.FIXProtocolHandler - Successfully parsed message: FIXMessage{type=A, sender=TESTCLIENT, target=SERVER1, seqNum=1}
+2025-09-25 15:43:13 [nioEventLoopGroup-3-2] INFO  c.fixserver.netty.FIXMessageHandler - Received FIX message from /127.0.0.1:54880: Type=A, Sender=TESTCLIENT, Target=SERVER1
+2025-09-25 15:43:13 [nioEventLoopGroup-3-2] DEBUG c.fixserver.netty.FIXMessageEncoder - Encoded FIX message: 8=FIX.4.4|9=74|34=1|35=A|49=SERVER1|52=2025-09-25T15:43:13.689|56=TESTCLIENT|98=0|108=30|10=154| (96 bytes)
+2025-09-25 15:43:13 [nioEventLoopGroup-3-2] DEBUG c.fixserver.netty.FIXMessageHandler - Sent FIX message: 8=FIX.4.4|9=74|34=1|35=A|49=SERVER1|52=2025-09-25T15:43:13.689|56=TESTCLIENT|98=0|108=30|10=154|
+2025-09-25 15:43:13 [nioEventLoopGroup-3-2] INFO  c.fixserver.netty.FIXMessageHandler - Client /127.0.0.1:54880 logged on with session TESTCLIENT-SERVER1
+Listening for transport dt_socket at address: 5005
+2025-09-25 15:45:14 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-09-25 15:45:14 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-09-25 15:45:14 [SpringApplicationShutdownHook] INFO  c.fixserver.server.FIXProtocolServer - Stopping FIX Protocol Server...
+2025-09-25 15:45:14 [SpringApplicationShutdownHook] INFO  c.fixserver.server.FIXProtocolServer - FIX Protocol Server stopped
+2025-09-25 15:45:14 [SpringApplicationShutdownHook] INFO  com.fixserver.netty.NettyFIXServer - Stopping Netty FIX Server...
+2025-09-25 15:45:14 [nioEventLoopGroup-3-1] INFO  c.fixserver.netty.FIXMessageHandler - FIX client disconnected: /127.0.0.1:54538
+2025-09-25 15:45:14 [nioEventLoopGroup-3-1] INFO  c.fixserver.netty.FIXMessageHandler - Cleaned up session: CLIENT1-SERVER1
+2025-09-25 15:45:14 [nioEventLoopGroup-3-2] INFO  c.fixserver.netty.FIXMessageHandler - FIX client disconnected: /127.0.0.1:54880
+2025-09-25 15:45:14 [nioEventLoopGroup-3-2] INFO  c.fixserver.netty.FIXMessageHandler - Cleaned up session: TESTCLIENT-SERVER1
+2025-09-25 15:45:14 [SpringApplicationShutdownHook] INFO  com.fixserver.netty.NettyFIXServer - Netty FIX Server stopped

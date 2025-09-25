@@ -91,3 +91,42 @@
 2025-09-25 11:18:22 [pool-4-thread-2] INFO  c.fixserver.server.FIXProtocolServer - Sent logout response: 8=FIX.4.4|9=70|34=2|35=5|49=SERVER1|52=2025-09-25T11:18:22.621|56=CLIENT2|58=Goodbye|10=200|
 2025-09-25 11:18:22 [pool-4-thread-2] INFO  c.fixserver.server.FIXProtocolServer - Client /127.0.0.1:65074 logged out
 2025-09-25 11:18:22 [pool-4-thread-2] INFO  c.fixserver.server.FIXProtocolServer - Closed connection to client /127.0.0.1:65074
+2025-09-25 13:54:06 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-09-25 13:54:06 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-09-25 13:54:07 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 26 ms
+2025-09-25 14:00:07 [pool-4-thread-1] INFO  c.fixserver.server.FIXProtocolServer - Accepted FIX client connection from /127.0.0.1:50660
+2025-09-25 14:00:07 [pool-4-thread-3] INFO  c.fixserver.server.FIXProtocolServer - Handling FIX client connection from /127.0.0.1:50660
+2025-09-25 14:00:07 [pool-4-thread-3] INFO  c.fixserver.server.FIXProtocolServer - Received FIX message from /127.0.0.1:50660: Type=A, Sender=CLIENT1, Target=SERVER1
+2025-09-25 14:00:07 [pool-4-thread-3] INFO  c.fixserver.server.FIXProtocolServer - Sent logon response to session CLIENT1-SERVER1: 8=FIX.4.4|9=71|34=1|35=A|49=SERVER1|52=2025-09-25T14:00:07.254|56=CLIENT1|98=0|108=30|10=119|
+2025-09-25 14:00:07 [pool-4-thread-3] INFO  c.fixserver.server.FIXProtocolServer - Client /127.0.0.1:50660 logged on with session CLIENT1-SERVER1
+2025-09-25 14:00:37 [pool-4-thread-3] INFO  c.fixserver.server.FIXProtocolServer - Received FIX message from /127.0.0.1:50660: Type=0, Sender=CLIENT1, Target=SERVER1
+2025-09-25 14:01:07 [pool-4-thread-3] INFO  c.fixserver.server.FIXProtocolServer - Received FIX message from /127.0.0.1:50660: Type=1, Sender=CLIENT1, Target=SERVER1
+2025-09-25 14:02:07 [pool-4-thread-3] INFO  c.fixserver.server.FIXProtocolServer - Received FIX message from /127.0.0.1:50660: Type=1, Sender=CLIENT1, Target=SERVER1
+2025-09-25 14:03:07 [pool-4-thread-3] INFO  c.fixserver.server.FIXProtocolServer - Received FIX message from /127.0.0.1:50660: Type=1, Sender=CLIENT1, Target=SERVER1
+2025-09-25 14:04:07 [pool-4-thread-3] INFO  c.fixserver.server.FIXProtocolServer - Received FIX message from /127.0.0.1:50660: Type=1, Sender=CLIENT1, Target=SERVER1
+2025-09-25 14:05:07 [pool-4-thread-3] INFO  c.fixserver.server.FIXProtocolServer - Received FIX message from /127.0.0.1:50660: Type=1, Sender=CLIENT1, Target=SERVER1
+2025-09-25 14:06:07 [pool-4-thread-3] INFO  c.fixserver.server.FIXProtocolServer - Received FIX message from /127.0.0.1:50660: Type=1, Sender=CLIENT1, Target=SERVER1
+2025-09-25 14:07:07 [pool-4-thread-3] INFO  c.fixserver.server.FIXProtocolServer - Received FIX message from /127.0.0.1:50660: Type=1, Sender=CLIENT1, Target=SERVER1
+2025-09-25 14:08:07 [pool-4-thread-3] INFO  c.fixserver.server.FIXProtocolServer - Received FIX message from /127.0.0.1:50660: Type=1, Sender=CLIENT1, Target=SERVER1
+2025-09-25 14:08:37 [pool-4-thread-3] INFO  c.fixserver.server.FIXProtocolServer - Received FIX message from /127.0.0.1:50660: Type=0, Sender=CLIENT1, Target=SERVER1
+2025-09-25 14:09:07 [pool-4-thread-3] INFO  c.fixserver.server.FIXProtocolServer - Received FIX message from /127.0.0.1:50660: Type=1, Sender=CLIENT1, Target=SERVER1
+2025-09-25 14:10:07 [pool-4-thread-3] INFO  c.fixserver.server.FIXProtocolServer - Received FIX message from /127.0.0.1:50660: Type=1, Sender=CLIENT1, Target=SERVER1
+2025-09-25 14:11:01 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-09-25 14:11:01 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-09-25 14:11:01 [SpringApplicationShutdownHook] INFO  c.fixserver.server.FIXProtocolServer - Stopping FIX Protocol Server...
+2025-09-25 14:11:01 [SpringApplicationShutdownHook] INFO  c.fixserver.server.FIXProtocolServer - FIX Protocol Server stopped
+2025-09-25 14:11:01 [SpringApplicationShutdownHook] INFO  com.fixserver.netty.NettyFIXServer - Stopping Netty FIX Server...
+2025-09-25 14:11:02 [SpringApplicationShutdownHook] INFO  com.fixserver.netty.NettyFIXServer - Netty FIX Server stopped
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  02:55 h
+[INFO] Finished at: 2025-09-25T14:11:02+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:2.7.18:run (default-cli) on project fix-server: Application finished with exit code: 143 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

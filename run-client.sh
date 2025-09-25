@@ -39,7 +39,7 @@ echo
 
 # Parse command line arguments
 HOST=${1:-localhost}
-PORT=${2:-9876}
+PORT=${2:-9878}
 SENDER_COMP_ID=${3:-CLIENT1}
 TARGET_COMP_ID=${4:-SERVER1}
 

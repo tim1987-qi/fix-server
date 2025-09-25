@@ -7,7 +7,8 @@ import java.util.concurrent.CompletableFuture;
 /**
  * Core interface representing a FIX session between two trading counterparties.
  * 
- * A FIX session is a logical connection that maintains state between a sender and target.
+ * A FIX session is a logical connection that maintains state between a sender
+ * and target.
  * It handles the complete lifecycle of FIX communication including:
  * - Session establishment (logon/logout)
  * - Message sequencing and ordering
@@ -16,7 +17,8 @@ import java.util.concurrent.CompletableFuture;
  * - Error handling and recovery
  * 
  * Session State Management:
- * - Each session maintains separate sequence numbers for incoming/outgoing messages
+ * - Each session maintains separate sequence numbers for incoming/outgoing
+ * messages
  * - Heartbeat intervals ensure connection liveness
  * - Session state persists across reconnections for message recovery
  * 
@@ -29,14 +31,16 @@ import java.util.concurrent.CompletableFuture;
  * @since 1.0
  */
 public interface FIXSession {
-    
+
     /**
      * Enumeration of possible session states in the FIX session lifecycle.
      * 
      * State Transitions:
-     * DISCONNECTED -> CONNECTING -> LOGON_SENT -> LOGGED_ON -> LOGOUT_SENT -> DISCONNECTING -> DISCONNECTED
+     * DISCONNECTED -> CONNECTING -> LOGON_SENT -> LOGGED_ON -> LOGOUT_SENT ->
+     * DISCONNECTING -> DISCONNECTED
      * 
-     * States can also transition directly to DISCONNECTED from any state in case of errors.
+     * States can also transition directly to DISCONNECTED from any state in case of
+     * errors.
      */
     enum Status {
         /** Session is not connected - initial and final state */
@@ -52,7 +56,7 @@ public interface FIXSession {
         /** Session is being torn down gracefully */
         DISCONNECTING
     }
-    
+
     /**
      * Gets the unique identifier for this session.
      * Typically constructed from sender and target company IDs.
@@ -60,7 +64,7 @@ public interface FIXSession {
      * @return unique session identifier string
      */
     String getSessionId();
-    
+
     /**
      * Gets the company ID that identifies this session as the sender.
      * This appears in the SenderCompID field of outgoing messages.
@@ -68,7 +72,7 @@ public interface FIXSession {
      * @return sender company identifier
      */
     String getSenderCompId();
-    
+
     /**
      * Gets the company ID that identifies the counterparty (target).
      * This appears in the TargetCompID field of outgoing messages.
@@ -76,7 +80,7 @@ public interface FIXSession {
      * @return target company identifier
      */
     String getTargetCompId();
-    
+
     /**
      * Gets the current state of the session lifecycle.
      * Used to determine what operations are valid and session health.
@@ -84,7 +88,7 @@ public interface FIXSession {
      * @return current session status
      */
     Status getStatus();
-    
+
     /**
      * Gets the next sequence number expected from the counterparty.
      * Used for gap detection and message ordering validation.
@@ -92,7 +96,7 @@ public interface FIXSession {
      * @return next expected incoming sequence number
      */
     int getNextIncomingSequenceNumber();
-    
+
     /**
      * Gets the next sequence number to use for outgoing messages.
      * Automatically incremented when messages are sent.
@@ -100,7 +104,7 @@ public interface FIXSession {
      * @return next outgoing sequence number
      */
     int getNextOutgoingSequenceNumber();
-    
+
     /**
      * Gets the timestamp of the last heartbeat received or sent.
      * Used for connection health monitoring and timeout detection.
@@ -108,7 +112,7 @@ public interface FIXSession {
      * @return last heartbeat timestamp or null if none recorded
      */
     LocalDateTime getLastHeartbeat();
-    
+
     /**
      * Gets the timestamp when the current session was established.
      * Used for session duration calculations and statistics.
@@ -116,7 +120,7 @@ public interface FIXSession {
      * @return session start time or null if not started
      */
     LocalDateTime getSessionStartTime();
-    
+
     /**
      * Processes an incoming FIX message asynchronously.
      * Handles sequence number validation, message routing, and protocol logic.
@@ -131,7 +135,7 @@ public interface FIXSession {
      * @return CompletableFuture that completes when processing is done
      */
     CompletableFuture<Void> processMessage(FIXMessage message);
-    
+
     /**
      * Sends a FIX message to the counterparty asynchronously.
      * Automatically sets session-specific fields and handles sequencing.
@@ -146,7 +150,7 @@ public interface FIXSession {
      * @return CompletableFuture that completes when message is sent
      */
     CompletableFuture<Void> sendMessage(FIXMessage message);
-    
+
     /**
      * Handles heartbeat processing for connection health monitoring.
      * Sends heartbeat messages when required based on configured intervals.
@@ -155,7 +159,7 @@ public interface FIXSession {
      * Will send heartbeat if sufficient time has passed since last activity.
      */
     void handleHeartbeat();
-    
+
     /**
      * Initiates graceful session disconnect asynchronously.
      * Sends logout message and transitions session to disconnected state.
@@ -169,7 +173,7 @@ public interface FIXSession {
      * @return CompletableFuture that completes when disconnect is finished
      */
     CompletableFuture<Void> disconnect();
-    
+
     /**
      * Checks if the session is currently active and able to process messages.
      * A session is considered active if it's in LOGGED_ON or CONNECTING state.
@@ -177,7 +181,7 @@ public interface FIXSession {
      * @return true if session can process business messages, false otherwise
      */
     boolean isActive();
-    
+
     /**
      * Gets the configured heartbeat interval for this session in seconds.
      * Determines how frequently heartbeat messages should be exchanged.
