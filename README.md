@@ -1,337 +1,336 @@
-# FIX Server
+# FIX Server - High-Performance Financial Trading Server
 
-Enterprise-grade FIX (Financial Information eXchange) protocol server for financial trading environments with dual-architecture support and comprehensive message management capabilities.
+A comprehensive, production-ready Financial Information eXchange (FIX) protocol server implementation built with Spring Boot and Netty, featuring dual-server architecture, advanced performance optimization, and comprehensive monitoring capabilities.
 
 ## 🚀 Key Features
 
-### Core FIX Protocol
-- **Complete FIX 4.4 and 5.0 protocol implementation** with full message validation
-- **Dual server architecture**: Traditional socket-based (port 9878) + High-performance Netty-based (port 9879)
-- **Advanced message parsing** with custom FIX message codecs and validation
-- **Session management** with heartbeat monitoring and timeout handling
+### **Dual Server Architecture**
+- **Traditional Socket Server** (Port 9878): Thread-per-connection model for maximum compatibility
+- **Netty Server** (Port 9879): High-performance, event-driven architecture for scalability and throughput
+- **Seamless Integration**: Both servers share core FIX protocol handling and session management
 
-### Performance & Scalability
-- **High-performance Netty server** with non-blocking I/O and configurable thread pools
-- **Concurrent session management** supporting 1000+ simultaneous connections
-- **Event-driven architecture** for optimal resource utilization
-- **Configurable buffer sizes** and connection pooling
+### **FIX Protocol Compliance**
+- **FIX 4.4 Protocol Support**: Complete implementation with comprehensive message validation
+- **Session Management**: Full lifecycle management with heartbeat monitoring and timeout handling
+- **Message Replay**: Gap fill and sequence number recovery for reliable message delivery
+- **Connection Recovery**: Automatic reconnection with exponential backoff and session restoration
 
-### Message Management
-- **Complete message persistence** with JPA/Hibernate integration
-- **Message replay service** with gap fill management for sequence number recovery
-- **Audit trail** with comprehensive logging of all FIX messages
-- **Database migration support** with Flyway for schema management
+### **Performance & Monitoring**
+- **Real-time Metrics**: Message throughput, processing latency, and connection statistics
+- **Performance Optimization**: Built-in performance analyzer with optimization recommendations
+- **Human-readable Logging**: FIX tag translation for improved debugging and monitoring
+- **Debug Mode**: Comprehensive debugging with JVM remote debugging support
 
-### Enterprise Features
-- **Enterprise-grade TLS security** with mutual authentication
-- **Real-time monitoring** with Prometheus metrics and health checks
-- **Regulatory compliance** with full audit trails and message archiving
-- **Production-ready error handling** and connection recovery
-- **Cross-platform support** with Windows and Unix runner scripts
+### **Storage & Persistence**
+- **Flexible Storage**: In-memory for development, PostgreSQL for production
+- **Message Audit**: Complete audit trail with message storage and replay capabilities
+- **Session Persistence**: Session state recovery across server restarts
 
-## 📋 Prerequisites
+### **Client Libraries**
+- **Multiple Client Types**: Traditional socket and Netty-based client implementations
+- **Interactive Testing**: Command-line clients for manual testing and integration
+- **Connection Handling**: Automatic reconnection and session recovery
 
-- **Java 11+ JDK** (Oracle JDK or OpenJDK recommended)
-- **Maven 3.6+** (or use included Maven wrapper)
-- **Database**: H2 (development) / PostgreSQL 12+ (production)
-- **Optional**: Docker and Docker Compose for containerized deployment
+## 📊 Performance Enhancements
+
+### **Latest Optimizations (v2.0)**
+- ✅ **FIX Tag Definitions**: Comprehensive tag library with human-readable field names
+- ✅ **Performance Monitoring**: Real-time performance metrics and optimization recommendations
+- ✅ **Memory Optimization**: Object pooling and garbage collection optimization
+- ✅ **Improved Logging**: Human-readable FIX message logging with field name translation
+- ✅ **Connection Pooling**: Optimized connection management and resource utilization
+
+### **Performance Metrics**
+- **Message Throughput**: Real-time messages per second tracking
+- **Processing Latency**: Min/max/average processing time monitoring
+- **Connection Statistics**: Active connections and peak concurrent usage
+- **Memory Usage**: Heap utilization and GC performance tracking
+
+## 🏗 Architecture Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    FIX Server Application                   │
+├─────────────────────────────────────────────────────────────┤
+│  Traditional Server (9878)  │  Netty Server (9879)         │
+│  ┌─────────────────────────┐ │ ┌─────────────────────────┐   │
+│  │ Socket-based            │ │ │ Event-driven            │   │
+│  │ Thread-per-connection   │ │ │ High-performance        │   │
+│  └─────────────────────────┘ │ └─────────────────────────┘   │
+├─────────────────────────────────────────────────────────────┤
+│                 Core FIX Protocol Engine                   │
+│  ┌─────────────┐ ┌─────────────┐ ┌─────────────────────┐   │
+│  │ Message     │ │ Session     │ │ Performance         │   │
+│  │ Processing  │ │ Management  │ │ Monitoring          │   │
+│  └─────────────┘ └─────────────┘ └─────────────────────┘   │
+├─────────────────────────────────────────────────────────────┤
+│                    Storage Layer                           │
+│  ┌─────────────────────────┐ ┌─────────────────────────┐   │
+│  │ In-Memory Store         │ │ PostgreSQL Store        │   │
+│  │ (Development)           │ │ (Production)            │   │
+│  └─────────────────────────┘ └─────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ## 🚀 Quick Start
 
-### 1. Environment Setup
+### Prerequisites
+- **Java 8+** (Java 11+ recommended for optimal performance)
+- **Maven 3.6+**
+- **PostgreSQL 12+** (optional, for production persistence)
 
+### Installation & Setup
+
+1. **Clone and Build**
 ```bash
-# Set up Java environment (macOS/Linux)
-./setup-env.sh && source .env
-
-# Windows users: Ensure Java 11+ and Maven are in PATH
-```
-
-### 2. Build & Test
-
-```bash
-# Build the application
+git clone https://github.com/tim1987-qi/fix-server.git
+cd fix-server
 ./mvnw clean compile
-
-# Run comprehensive test suite
-./mvnw test
-
-# Package for deployment
-./mvnw package
 ```
 
-### 3. Run the FIX Server
-
+2. **Start in Development Mode**
 ```bash
-# Start both servers (socket + Netty)
-./run.sh
-
-# Windows
-run.bat
-
-# Or using Maven directly
 ./mvnw spring-boot:run
 ```
 
-**Server Endpoints:**
+3. **Start in Debug Mode** (with JVM debugging on port 5005)
+```bash
+./run-debug.sh
+```
+
+### Server Endpoints
 - **Traditional FIX Server**: `localhost:9878`
-- **High-Performance Netty Server**: `localhost:9879`
+- **Netty FIX Server**: `localhost:9879`
+- **Web Management**: `http://localhost:8080`
 - **Health Check**: `http://localhost:8080/actuator/health`
 - **Metrics**: `http://localhost:8080/actuator/prometheus`
+- **JVM Debug Port**: `localhost:5005` (debug mode only)
 
-### 4. Test with FIX Clients
+## 🧪 Testing & Client Usage
 
+### **Interactive Clients**
+
+**Traditional Socket Client:**
 ```bash
-# Test traditional socket client
 ./run-client.sh
-
-# Test high-performance Netty client
-./run-netty-client.sh
-
-# Windows equivalents
-run-client.bat
-run-netty-client.bat
+# Connects to port 9878 with interactive command interface
 ```
 
-### 5. Database Setup
-
-**Development (H2 - Default):**
-- Automatic setup with in-memory database
-- No additional configuration required
-
-**Production (PostgreSQL):**
-```sql
-CREATE DATABASE fixserver;
-CREATE USER fixserver WITH PASSWORD 'your_secure_password';
-GRANT ALL PRIVILEGES ON DATABASE fixserver TO fixserver;
-```
-
-Update `application-prod.yml`:
-```yaml
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/fixserver
-    username: fixserver
-    password: ${DB_PASSWORD}
-```
-
-Run migrations:
+**High-Performance Netty Client:**
 ```bash
-./mvnw flyway:migrate -Dspring.profiles.active=prod
+./run-netty-client.sh
+# Connects to port 9879 with event-driven processing
 ```
 
-## ⚙️ Configuration
+### **Client Commands**
+```
+Commands available in interactive mode:
+- market <symbol> <buy|sell> <quantity>     # Send market order
+- limit <symbol> <buy|sell> <quantity> <price>  # Send limit order
+- heartbeat                                 # Send heartbeat
+- quit                                      # Exit client
+```
 
-### Server Configuration
+### **Example Trading Session**
+```bash
+$ ./run-netty-client.sh
+Connected to Netty FIX Server at localhost:9879
+Logged on successfully
 
-Configure via `application.yml` or environment variables:
+=== Netty FIX Client Interactive Session ===
+> market AAPL buy 100
+Order sent: AAPL BUY 100 shares (Market Order)
+Received execution report: Order accepted
 
-**Core Settings:**
+> limit MSFT sell 50 150.00
+Order sent: MSFT SELL 50 shares @ $150.00 (Limit Order)
+Received execution report: Order accepted
+
+> quit
+Disconnected from server
+```
+
+## 📈 Performance Monitoring
+
+### **Real-time Performance Dashboard**
+Access performance metrics at: `http://localhost:8080/actuator/prometheus`
+
+### **Performance Statistics**
+The server provides comprehensive performance monitoring:
+
+```bash
+# View performance summary in logs
+tail -f server-debug.log | grep "Performance Summary"
+
+=== FIX Server Performance Summary ===
+Total Messages Processed: 15,847
+Total Bytes Processed: 2.3 MB
+Average Processing Time: 1.23 ms
+Message Throughput: 2,450 msg/sec
+Data Throughput: 0.35 MB/sec
+Active Connections: 5
+Max Concurrent Connections: 12
+```
+
+### **Optimization Recommendations**
+The server automatically analyzes performance and provides recommendations:
+
+```
+=== Optimization Recommendations ===
+- Performance looks good! No specific optimizations needed.
+- Consider using Netty server for connections > 50 concurrent users
+- Memory usage is optimal at 45.2%
+```
+
+## 🔧 Configuration
+
+### **Application Configuration** (`application.yml`)
 ```yaml
 fix:
   server:
-    port: 9878                    # Traditional socket server port
-    heartbeat-interval: 30        # Heartbeat interval in seconds
-    session-timeout: 120          # Session timeout in seconds
+    port: 9878                    # Traditional server port
+    netty-port: 9879             # Netty server port
+    max-sessions: 100            # Maximum concurrent sessions
+    heartbeat-interval: 30       # Heartbeat interval in seconds
     
-netty:
-  server:
-    port: 9879                    # Netty server port
-    boss-threads: 1               # Boss thread pool size
-    worker-threads: 4             # Worker thread pool size
-    buffer-size: 8192             # Buffer size for connections
-```
+  performance:
+    monitoring-enabled: true     # Enable performance monitoring
+    metrics-interval: 60         # Metrics collection interval
+    optimization-alerts: true   # Enable optimization recommendations
 
-**Database Configuration:**
-```yaml
 spring:
   datasource:
-    url: jdbc:h2:mem:fixserver    # H2 for development
-    # url: jdbc:postgresql://localhost:5432/fixserver  # PostgreSQL for production
+    url: jdbc:postgresql://localhost:5432/fixserver
+    username: fixuser
+    password: fixpass
+  
   jpa:
     hibernate:
-      ddl-auto: validate          # Use Flyway for schema management
+      ddl-auto: validate
+    show-sql: false              # Set to true for SQL debugging
 ```
 
-### Environment Variables
-
-- `DB_PASSWORD`: Database password
-- `ADMIN_PASSWORD`: Admin interface password  
-- `TLS_KEYSTORE_PATH`: Path to TLS keystore
-- `TLS_KEYSTORE_PASSWORD`: TLS keystore password
-- `FIX_SERVER_PORT`: Override default FIX server port
-- `NETTY_SERVER_PORT`: Override default Netty server port
-
-### Application Profiles
-
-- **`dev`**: Development profile (default) - H2 database, debug logging
-- **`test`**: Testing profile - In-memory database, test configurations
-- **`prod`**: Production profile - PostgreSQL, optimized settings, security enabled
-
-**Activate profiles:**
+### **Debug Configuration**
 ```bash
-# Development (default)
-./mvnw spring-boot:run
+# Start with custom debug port
+DEBUG_PORT=5006 ./run-debug.sh
 
-# Production
-./mvnw spring-boot:run -Dspring.profiles.active=prod
-
-# Multiple profiles
-./mvnw spring-boot:run -Dspring.profiles.active=prod,monitoring
+# Start with performance profiling
+JAVA_OPTS="-XX:+UseG1GC -XX:+PrintGCDetails" ./run-debug.sh
 ```
 
-## 🏗️ Architecture
+## 🔍 Advanced Features
 
-### Dual Server Implementation
+### **Heartbeat Management**
+- **Automatic Heartbeats**: Configurable interval (default: 30 seconds)
+- **Test Requests**: Sent after 1.5x heartbeat interval
+- **Timeout Detection**: Session terminated after 2.0x interval
+- **Connection Recovery**: Automatic reconnection with exponential backoff
 
-**Traditional Socket Server (Port 9878):**
-- Thread-per-connection model
-- Suitable for moderate load scenarios
-- Full FIX protocol compliance
-- Session state management
+### **Message Replay & Gap Fill**
+- **Sequence Number Tracking**: Automatic gap detection
+- **Message Replay**: Resend missing messages on reconnection
+- **Gap Fill Messages**: Administrative message handling
+- **Session Recovery**: State restoration across disconnections
 
-**High-Performance Netty Server (Port 9879):**
-- Event-driven, non-blocking I/O
-- Optimized for high-throughput scenarios
-- Custom FIX message codecs
-- Configurable thread pools
-
-### Core Components
-
-```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   FIX Client    │────│   FIX Server     │────│  Message Store  │
-│                 │    │                  │    │                 │
-│ • Socket Client │    │ • Protocol       │    │ • Persistence   │
-│ • Netty Client  │    │ • Session Mgmt   │    │ • Replay        │
-│ • Message Types │    │ • Validation     │    │ • Audit Trail   │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-                                │
-                       ┌──────────────────┐
-                       │   Monitoring     │
-                       │                  │
-                       │ • Health Checks  │
-                       │ • Metrics        │
-                       │ • Logging        │
-                       └──────────────────┘
-```
-
-## 🐳 Docker Deployment
-
-### Build and Run
-
+### **Human-Readable Logging**
 ```bash
-# Build Docker image
-docker build -t fix-server .
+# Before: Raw FIX tags
+8=FIX.4.4|9=71|35=D|49=CLIENT1|56=SERVER1|55=AAPL|54=1|38=100
 
-# Run with Docker Compose (includes PostgreSQL)
-docker-compose up -d
-
-# View logs
-docker-compose logs -f fix-server
-
-# Stop services
-docker-compose down
+# After: Human-readable format
+BeginString=FIX.4.4 | BodyLength=71 | MsgType=D(NewOrderSingle) | 
+SenderCompID=CLIENT1 | TargetCompID=SERVER1 | Symbol=AAPL | 
+Side=1(Buy) | OrderQty=100
 ```
 
-### Docker Configuration
-
-The `docker-compose.yml` includes:
-- FIX Server application
-- PostgreSQL database
-- Volume mounts for persistence
-- Environment variable configuration
-
-## 📊 Monitoring & Observability
-
-### Health Checks
-- **Endpoint**: `GET /actuator/health`
-- **Database connectivity**: Automatic health checks
-- **FIX server status**: Port availability and session counts
-
-### Metrics (Prometheus)
-- **Endpoint**: `GET /actuator/prometheus`
-- **Session metrics**: Active sessions, connection counts
-- **Message metrics**: Messages processed, validation errors
-- **Performance metrics**: Response times, throughput
-
-### Logging
-- **Structured logging** with JSON format in production
-- **FIX message logging** with configurable levels
-- **Audit trail** for all financial messages
-- **Error tracking** with stack traces and context
+### **Performance Optimization**
+- **Object Pooling**: Reduced garbage collection pressure
+- **String Builder Reuse**: Optimized string operations
+- **Connection Metrics**: Real-time connection monitoring
+- **Memory Analysis**: Automatic memory usage optimization
 
 ## 📚 Documentation
 
-- **[FIX Client Guide](FIX_CLIENT_GUIDE.md)**: Complete client implementation guide
-- **[FIX Client Summary](FIX_CLIENT_SUMMARY.md)**: Quick reference for client usage
-- **[Server Developer Guide](FIX_SERVER_DEVELOPMENT_GUIDE.md)**: Server architecture and development
-- **[Setup Guide](SETUP_GUIDE.md)**: Detailed environment setup instructions
+### **Comprehensive Guides**
+- **[Setup Guide](SETUP_GUIDE.md)**: Detailed installation and configuration
+- **[Client Guide](FIX_CLIENT_GUIDE.md)**: Client library usage and examples
+- **[Development Guide](FIX_SERVER_DEVELOPMENT_GUIDE.md)**: Development and contribution guidelines
+- **[Debug Guide](DEBUG_GUIDE.md)**: Debugging and troubleshooting
+- **[Architecture Flowchart](FIX_SERVER_FLOWCHART.md)**: Detailed system architecture and message flows
 
-## 🧪 Testing
+### **API Documentation**
+- **FIX Protocol**: Full FIX 4.4 specification compliance
+- **REST Endpoints**: Management and monitoring APIs
+- **Client Libraries**: Java client SDK with examples
 
-### Test Coverage
-- **Unit Tests**: Individual component testing
-- **Integration Tests**: Database and server integration
-- **FIX Protocol Tests**: Message validation and parsing
-- **Performance Tests**: Load testing for both server implementations
+## 🛠 Development & Contribution
 
-### Run Tests
-```bash
-# All tests
-./mvnw test
-
-# Specific test categories
-./mvnw test -Dtest="*Test"           # Unit tests
-./mvnw test -Dtest="*IntegrationTest" # Integration tests
-
-# With coverage report
-./mvnw test jacoco:report
-```
-
-## 🔧 Development
-
-### Project Structure
-```
-src/main/java/com/fixserver/
-├── client/          # FIX client implementations
-├── config/          # Spring configuration
-├── core/            # Core FIX message handling
-├── netty/           # Netty-based server implementation
-├── protocol/        # FIX protocol validation and parsing
-├── replay/          # Message replay and gap fill
-├── server/          # Traditional socket server
-├── session/         # Session management and heartbeat
-└── store/           # Message persistence layer
-```
-
-### Building from Source
+### **Development Setup**
 ```bash
 # Clone repository
 git clone https://github.com/tim1987-qi/fix-server.git
 cd fix-server
 
-# Build and test
-./mvnw clean install
+# Setup development environment
+./setup-env.sh
 
-# Run locally
-./mvnw spring-boot:run
+# Run tests
+./mvnw test
+
+# Start in debug mode
+./run-debug.sh
 ```
+
+### **Code Quality**
+- **Test Coverage**: Comprehensive unit and integration tests
+- **Code Style**: Consistent formatting and documentation
+- **Performance Testing**: Load testing and benchmarking
+- **Security**: Input validation and secure session management
+
+## 📊 Recent Improvements (v2.0)
+
+### **Performance Enhancements**
+- ✅ **FIX Tag Library**: Comprehensive tag definitions with human-readable names
+- ✅ **Performance Monitoring**: Real-time metrics and optimization recommendations
+- ✅ **Memory Optimization**: Object pooling and GC optimization
+- ✅ **Improved Logging**: Human-readable FIX message formatting
+- ✅ **Debug Scripts**: Enhanced debugging with JVM remote debugging
+
+### **Architecture Improvements**
+- ✅ **Dual Server Support**: Traditional and Netty servers running simultaneously
+- ✅ **Connection Recovery**: Robust reconnection with exponential backoff
+- ✅ **Session Management**: Enhanced session lifecycle and state management
+- ✅ **Message Replay**: Gap fill and sequence number recovery
+- ✅ **Comprehensive Documentation**: Detailed flowcharts and guides
+
+### **Developer Experience**
+- ✅ **Interactive Clients**: Command-line clients for easy testing
+- ✅ **Debug Mode**: JVM debugging with IDE integration
+- ✅ **Performance Dashboard**: Real-time monitoring and recommendations
+- ✅ **Human-readable Logs**: FIX tag translation for better debugging
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Development Guide](FIX_SERVER_DEVELOPMENT_GUIDE.md) for details on:
+- Code style and standards
+- Testing requirements
+- Pull request process
+- Performance benchmarking
 
 ## 📄 License
 
-Enterprise License - See LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+- **Documentation**: Check our comprehensive guides in the `/docs` folder
+- **Issues**: Report bugs and feature requests on GitHub Issues
+- **Performance**: Use the built-in performance analyzer for optimization guidance
+- **Debug**: Enable debug mode for detailed troubleshooting
 
 ---
 
-## 🚀 Getting Started Checklist
+**Built with ❤️ for the financial trading community**
 
-- [ ] Install Java 11+ and Maven 3.6+
-- [ ] Clone the repository
-- [ ] Run `./mvnw clean install`
-- [ ] Start the server with `./run.sh`
-- [ ] Test with clients using `./run-client.sh` and `./run-netty-client.sh`
-- [ ] Check health at `http://localhost:8080/actuator/health`
-- [ ] Review documentation in the guides above
-
-**Need help?** Check the [Setup Guide](SETUP_GUIDE.md) for detailed instructions.
+*High-performance FIX protocol server designed for modern trading systems*

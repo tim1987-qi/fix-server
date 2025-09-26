@@ -3,9 +3,12 @@ package com.fixserver.netty;
 import com.fixserver.core.FIXMessage;
 import com.fixserver.core.FIXMessageImpl;
 import com.fixserver.protocol.FIXProtocolHandler;
+import com.fixserver.protocol.FIXTags;
+import com.fixserver.performance.PerformanceOptimizer;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,6 +31,9 @@ public class FIXMessageHandler extends SimpleChannelInboundHandler<String> {
     private final FIXProtocolHandler protocolHandler;
     private final ConcurrentMap<String, NettyFIXSession> sessions = new ConcurrentHashMap<>();
     
+    @Autowired
+    private PerformanceOptimizer performanceOptimizer;
+    
     public FIXMessageHandler(FIXProtocolHandler protocolHandler) {
         this.protocolHandler = protocolHandler;
     }
@@ -36,6 +42,11 @@ public class FIXMessageHandler extends SimpleChannelInboundHandler<String> {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         String clientAddress = ctx.channel().remoteAddress().toString();
         log.info("New FIX client connected: {}", clientAddress);
+        
+        if (performanceOptimizer != null) {
+            performanceOptimizer.recordConnectionCreated();
+        }
+        
         super.channelActive(ctx);
     }
     
@@ -43,6 +54,10 @@ public class FIXMessageHandler extends SimpleChannelInboundHandler<String> {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         String clientAddress = ctx.channel().remoteAddress().toString();
         log.info("FIX client disconnected: {}", clientAddress);
+        
+        if (performanceOptimizer != null) {
+            performanceOptimizer.recordConnectionClosed();
+        }
         
         // Clean up session
         String channelId = ctx.channel().id().asShortText();
@@ -57,14 +72,14 @@ public class FIXMessageHandler extends SimpleChannelInboundHandler<String> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String rawMessage) throws Exception {
         String clientAddress = ctx.channel().remoteAddress().toString();
-        log.debug("Received raw message from {}: {}", clientAddress, rawMessage.replace('\u0001', '|'));
+        long startTime = System.nanoTime();
+        
+        log.debug("Received raw message from {}: {}", clientAddress, FIXTags.formatForLogging(rawMessage));
         
         try {
             // Parse the FIX message
             FIXMessage message = protocolHandler.parse(rawMessage);
-            log.info("Received FIX message from {}: Type={}, Sender={}, Target={}", 
-                    clientAddress, message.getMessageType(), 
-                    message.getSenderCompId(), message.getTargetCompId());
+            log.info("Received FIX message from {}: {}", clientAddress, message.toReadableString());
             
             // Get or create session
             String channelId = ctx.channel().id().asShortText();
@@ -74,19 +89,19 @@ public class FIXMessageHandler extends SimpleChannelInboundHandler<String> {
             String messageType = message.getMessageType();
             
             switch (messageType) {
-                case "A": // Logon
+                case FIXTags.MsgType.LOGON:
                     handleLogon(message, session, ctx);
                     break;
-                case "5": // Logout
+                case FIXTags.MsgType.LOGOUT:
                     handleLogout(message, session, ctx);
                     break;
-                case "0": // Heartbeat
+                case FIXTags.MsgType.HEARTBEAT:
                     handleHeartbeat(message, session, ctx);
                     break;
-                case "1": // Test Request
+                case FIXTags.MsgType.TEST_REQUEST:
                     handleTestRequest(message, session, ctx);
                     break;
-                case "D": // New Order Single
+                case FIXTags.MsgType.NEW_ORDER_SINGLE:
                     handleNewOrder(message, session, ctx);
                     break;
                 default:
@@ -94,8 +109,14 @@ public class FIXMessageHandler extends SimpleChannelInboundHandler<String> {
                     break;
             }
             
+            // Record performance metrics
+            if (performanceOptimizer != null) {
+                long processingTime = System.nanoTime() - startTime;
+                performanceOptimizer.recordMessageProcessing(processingTime, rawMessage.length());
+            }
+            
         } catch (Exception e) {
-            log.error("Error processing FIX message from {}: {}", clientAddress, rawMessage.replace('\u0001', '|'), e);
+            log.error("Error processing FIX message from {}: {}", clientAddress, FIXTags.formatForLogging(rawMessage), e);
             sendReject(ctx, "Invalid message format: " + e.getMessage());
         }
     }
@@ -126,8 +147,8 @@ public class FIXMessageHandler extends SimpleChannelInboundHandler<String> {
         logonResponse.setField(FIXMessage.TARGET_COMP_ID, senderCompId);
         logonResponse.setField(FIXMessage.MESSAGE_SEQUENCE_NUMBER, "1");
         logonResponse.setField(FIXMessage.SENDING_TIME, LocalDateTime.now().toString());
-        logonResponse.setField(98, "0"); // EncryptMethod (None)
-        logonResponse.setField(108, "30"); // HeartBtInt
+        logonResponse.setField(FIXTags.ENCRYPT_METHOD, "0"); // EncryptMethod (None)
+        logonResponse.setField(FIXTags.HEARTBT_INT, "30"); // HeartBtInt
         
         session.setLoggedOn(true);
         sendMessage(ctx, logonResponse);
@@ -147,7 +168,7 @@ public class FIXMessageHandler extends SimpleChannelInboundHandler<String> {
         logoutResponse.setField(FIXMessage.TARGET_COMP_ID, senderCompId);
         logoutResponse.setField(FIXMessage.MESSAGE_SEQUENCE_NUMBER, "2");
         logoutResponse.setField(FIXMessage.SENDING_TIME, LocalDateTime.now().toString());
-        logoutResponse.setField(58, "Goodbye"); // Text
+        logoutResponse.setField(FIXTags.TEXT, "Goodbye"); // Text
         
         sendMessage(ctx, logoutResponse);
         session.setLoggedOn(false);
@@ -166,7 +187,7 @@ public class FIXMessageHandler extends SimpleChannelInboundHandler<String> {
     private void handleTestRequest(FIXMessage testRequest, NettyFIXSession session, ChannelHandlerContext ctx) throws Exception {
         String senderCompId = testRequest.getSenderCompId();
         String targetCompId = testRequest.getTargetCompId();
-        String testReqId = testRequest.getField(112); // TestReqID
+        String testReqId = testRequest.getField(FIXTags.TEST_REQ_ID); // TestReqID
         
         // Create heartbeat response
         FIXMessage heartbeatResponse = new FIXMessageImpl();
@@ -178,7 +199,7 @@ public class FIXMessageHandler extends SimpleChannelInboundHandler<String> {
         heartbeatResponse.setField(FIXMessage.SENDING_TIME, LocalDateTime.now().toString());
         
         if (testReqId != null && !testReqId.isEmpty()) {
-            heartbeatResponse.setField(112, testReqId); // TestReqID
+            heartbeatResponse.setField(FIXTags.TEST_REQ_ID, testReqId); // TestReqID
         }
         
         sendMessage(ctx, heartbeatResponse);
@@ -188,10 +209,10 @@ public class FIXMessageHandler extends SimpleChannelInboundHandler<String> {
     private void handleNewOrder(FIXMessage orderMessage, NettyFIXSession session, ChannelHandlerContext ctx) throws Exception {
         String senderCompId = orderMessage.getSenderCompId();
         String targetCompId = orderMessage.getTargetCompId();
-        String clOrdId = orderMessage.getField(11); // ClOrdID
-        String symbol = orderMessage.getField(55); // Symbol
-        String side = orderMessage.getField(54); // Side
-        String orderQty = orderMessage.getField(38); // OrderQty
+        String clOrdId = orderMessage.getField(FIXTags.CL_ORD_ID); // ClOrdID
+        String symbol = orderMessage.getField(FIXTags.SYMBOL); // Symbol
+        String side = orderMessage.getField(FIXTags.SIDE); // Side
+        String orderQty = orderMessage.getField(FIXTags.ORDER_QTY); // OrderQty
         
         // Create execution report (order accepted)
         FIXMessage executionReport = new FIXMessageImpl();
@@ -203,15 +224,15 @@ public class FIXMessageHandler extends SimpleChannelInboundHandler<String> {
         executionReport.setField(FIXMessage.SENDING_TIME, LocalDateTime.now().toString());
         
         // Order-specific fields
-        executionReport.setField(11, clOrdId); // ClOrdID
-        executionReport.setField(17, "EXEC_" + System.currentTimeMillis()); // ExecID
+        executionReport.setField(FIXTags.CL_ORD_ID, clOrdId); // ClOrdID
+        executionReport.setField(FIXTags.EXEC_ID, "EXEC_" + System.currentTimeMillis()); // ExecID
         executionReport.setField(20, "0"); // ExecTransType
-        executionReport.setField(37, "ORDER_" + System.currentTimeMillis()); // OrderID
-        executionReport.setField(39, "0"); // OrdStatus (New)
-        executionReport.setField(54, side); // Side
-        executionReport.setField(55, symbol); // Symbol
-        executionReport.setField(150, "0"); // ExecType (New)
-        executionReport.setField(151, orderQty); // LeavesQty
+        executionReport.setField(FIXTags.ORDER_ID, "ORDER_" + System.currentTimeMillis()); // OrderID
+        executionReport.setField(FIXTags.ORD_STATUS, "0"); // OrdStatus (New)
+        executionReport.setField(FIXTags.SIDE, side); // Side
+        executionReport.setField(FIXTags.SYMBOL, symbol); // Symbol
+        executionReport.setField(FIXTags.EXEC_TYPE, "0"); // ExecType (New)
+        executionReport.setField(FIXTags.LEAVES_QTY, orderQty); // LeavesQty
         
         sendMessage(ctx, executionReport);
         log.info("Processed order {} for symbol {} from {}", clOrdId, symbol, ctx.channel().remoteAddress());
@@ -228,7 +249,7 @@ public class FIXMessageHandler extends SimpleChannelInboundHandler<String> {
     private void sendMessage(ChannelHandlerContext ctx, FIXMessage message) throws Exception {
         String fixString = message.toFixString();
         ctx.writeAndFlush(fixString);
-        log.debug("Sent FIX message: {}", fixString.replace('\u0001', '|'));
+        log.debug("Sent FIX message: {}", FIXTags.formatForLogging(fixString));
     }
     
     private void sendReject(ChannelHandlerContext ctx, String reason) throws Exception {
@@ -239,8 +260,8 @@ public class FIXMessageHandler extends SimpleChannelInboundHandler<String> {
         rejectMessage.setField(FIXMessage.TARGET_COMP_ID, "CLIENT");
         rejectMessage.setField(FIXMessage.MESSAGE_SEQUENCE_NUMBER, "1");
         rejectMessage.setField(FIXMessage.SENDING_TIME, LocalDateTime.now().toString());
-        rejectMessage.setField(45, "0"); // RefSeqNum
-        rejectMessage.setField(58, reason); // Text
+        rejectMessage.setField(FIXTags.REF_SEQ_NUM, "0"); // RefSeqNum
+        rejectMessage.setField(FIXTags.TEXT, reason); // Text
         
         sendMessage(ctx, rejectMessage);
     }
@@ -253,10 +274,10 @@ public class FIXMessageHandler extends SimpleChannelInboundHandler<String> {
         rejectMessage.setField(FIXMessage.TARGET_COMP_ID, senderCompId);
         rejectMessage.setField(FIXMessage.MESSAGE_SEQUENCE_NUMBER, "5");
         rejectMessage.setField(FIXMessage.SENDING_TIME, LocalDateTime.now().toString());
-        rejectMessage.setField(45, "0"); // RefSeqNum
-        rejectMessage.setField(372, "D"); // RefMsgType
-        rejectMessage.setField(380, "1"); // BusinessRejectReason
-        rejectMessage.setField(58, reason); // Text
+        rejectMessage.setField(FIXTags.REF_SEQ_NUM, "0"); // RefSeqNum
+        rejectMessage.setField(FIXTags.REF_MSG_TYPE, "D"); // RefMsgType
+        rejectMessage.setField(FIXTags.BUSINESS_REJECT_REASON, "1"); // BusinessRejectReason
+        rejectMessage.setField(FIXTags.TEXT, reason); // Text
         
         sendMessage(ctx, rejectMessage);
     }

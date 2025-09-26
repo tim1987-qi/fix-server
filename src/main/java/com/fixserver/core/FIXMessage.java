@@ -1,8 +1,8 @@
 package com.fixserver.core;
 
+import com.fixserver.protocol.FIXTags;
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Core interface representing a FIX (Financial Information eXchange) protocol message.
@@ -28,23 +28,23 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public interface FIXMessage {
     
-    // Standard FIX field tags - These are the official FIX protocol field identifiers
+    // Standard FIX field tags - Use FIXTags constants for comprehensive tag definitions
     /** FIX version identifier (e.g., "FIX.4.4") - Always first field in message */
-    int BEGIN_STRING = 8;
+    int BEGIN_STRING = FIXTags.BEGIN_STRING;
     /** Length of message body in bytes - Used for message parsing */
-    int BODY_LENGTH = 9;
+    int BODY_LENGTH = FIXTags.BODY_LENGTH;
     /** Three-digit checksum for message integrity - Always last field */
-    int CHECKSUM = 10;
+    int CHECKSUM = FIXTags.CHECKSUM;
     /** Single character identifying message type (e.g., "D" for New Order) */
-    int MESSAGE_TYPE = 35;
+    int MESSAGE_TYPE = FIXTags.MSG_TYPE;
     /** Unique identifier of message sender */
-    int SENDER_COMP_ID = 49;
+    int SENDER_COMP_ID = FIXTags.SENDER_COMP_ID;
     /** Unique identifier of message recipient */
-    int TARGET_COMP_ID = 56;
+    int TARGET_COMP_ID = FIXTags.TARGET_COMP_ID;
     /** Sequential message number for ordering and gap detection */
-    int MESSAGE_SEQUENCE_NUMBER = 34;
+    int MESSAGE_SEQUENCE_NUMBER = FIXTags.MSG_SEQ_NUM;
     /** Timestamp when message was sent (format: YYYYMMDD-HH:MM:SS) */
-    int SENDING_TIME = 52;
+    int SENDING_TIME = FIXTags.SENDING_TIME;
     
     /**
      * Retrieves the FIX protocol version from the BeginString field.
@@ -150,4 +150,16 @@ public interface FIXMessage {
      * @return list of validation error descriptions (empty if valid)
      */
     java.util.List<String> getValidationErrors();
+    
+    /**
+     * Converts the message to a human-readable format for logging.
+     * Replaces numeric field tags with descriptive names and formats values appropriately.
+     * 
+     * Example: "MsgType=D(NewOrderSingle) | Symbol=AAPL | Side=1(Buy) | OrderQty=100"
+     * 
+     * @return human-readable message representation
+     */
+    default String toReadableString() {
+        return FIXTags.formatForLogging(toFixString());
+    }
 }
