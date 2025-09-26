@@ -10,6 +10,7 @@
 /Users/qt/workspace/fix-server/src/main/java/com/fixserver/config/MessageStoreConfiguration.java
 /Users/qt/workspace/fix-server/src/main/java/com/fixserver/store/repository/MessageRepository.java
 /Users/qt/workspace/fix-server/src/main/java/com/fixserver/protocol/FIXFormatException.java
+/Users/qt/workspace/fix-server/src/main/java/com/fixserver/protocol/FIXTags.java
 /Users/qt/workspace/fix-server/src/main/java/com/fixserver/netty/NettyFIXSession.java
 /Users/qt/workspace/fix-server/src/main/java/com/fixserver/client/messages/OrderMessage.java
 /Users/qt/workspace/fix-server/src/main/java/com/fixserver/client/FIXClientConnectionHandler.java
@@ -34,6 +35,7 @@
 /Users/qt/workspace/fix-server/src/main/java/com/fixserver/client/FIXClientMessageHandler.java
 /Users/qt/workspace/fix-server/src/main/java/com/fixserver/session/FIXSession.java
 /Users/qt/workspace/fix-server/src/main/java/com/fixserver/protocol/FIXParseException.java
+/Users/qt/workspace/fix-server/src/main/java/com/fixserver/performance/PerformanceOptimizer.java
 /Users/qt/workspace/fix-server/src/main/java/com/fixserver/protocol/FIXValidator.java
 /Users/qt/workspace/fix-server/src/main/java/com/fixserver/store/MessageStore.java
 /Users/qt/workspace/fix-server/src/main/java/com/fixserver/netty/FIXMessageDecoder.java
