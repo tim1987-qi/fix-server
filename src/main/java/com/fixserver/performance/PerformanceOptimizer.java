@@ -1,6 +1,7 @@
 package com.fixserver.performance;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,9 +40,20 @@ public class PerformanceOptimizer {
     private final AtomicLong maxConcurrentConnections = new AtomicLong(0);
     private final LongAdder totalConnectionsCreated = new LongAdder();
     
-    // Memory optimization
+    // Memory optimization - Enhanced object pools
     private final ConcurrentHashMap<String, Object> objectPool = new ConcurrentHashMap<>();
-    private final ThreadLocal<StringBuilder> stringBuilderPool = ThreadLocal.withInitial(() -> new StringBuilder(1024));
+    private final ThreadLocal<StringBuilder> stringBuilderPool = ThreadLocal.withInitial(() -> new StringBuilder(2048));
+    private final ThreadLocal<byte[]> byteBufferPool = ThreadLocal.withInitial(() -> new byte[8192]);
+    
+    // Integration with optimized components
+    @Autowired(required = false)
+    private HighPerformanceMessageParser optimizedParser;
+    
+    @Autowired(required = false)
+    private AsyncMessageStore asyncStore;
+    
+    @Autowired(required = false)
+    private JVMOptimizationConfig jvmConfig;
     
     // Timing utilities
     private final LocalDateTime startTime = LocalDateTime.now();
@@ -99,6 +111,30 @@ public class PerformanceOptimizer {
         StringBuilder sb = stringBuilderPool.get();
         sb.setLength(0); // Clear previous content
         return sb;
+    }
+    
+    /**
+     * Get a reusable byte buffer for I/O operations.
+     * This reduces memory allocation for temporary byte operations.
+     * 
+     * @return thread-local byte array
+     */
+    public byte[] getByteBuffer() {
+        return byteBufferPool.get();
+    }
+    
+    /**
+     * Get optimized message parser if available
+     */
+    public HighPerformanceMessageParser getOptimizedParser() {
+        return optimizedParser;
+    }
+    
+    /**
+     * Check if optimized components are available
+     */
+    public boolean hasOptimizedComponents() {
+        return optimizedParser != null && asyncStore != null;
     }
     
     /**
@@ -178,8 +214,37 @@ public class PerformanceOptimizer {
                 "Consider increasing heap size or optimizing object allocation.");
         }
         
+        // Check if optimized components are being used
+        if (!hasOptimizedComponents()) {
+            recommendations.add("Enable optimized components: OptimizedFIXMessage, HighPerformanceMessageParser, AsyncMessageStore");
+        }
+        
+        // JVM recommendations
+        if (jvmConfig != null) {
+            recommendations.addAll(jvmConfig.getJVMTuningRecommendations());
+        }
+        
+        // Async store recommendations
+        if (asyncStore != null) {
+            AsyncMessageStore.AsyncStoreStats storeStats = asyncStore.getStats();
+            if (storeStats.getQueueOverflows() > 0) {
+                recommendations.add("Message store queue overflows detected (" + storeStats.getQueueOverflows() + 
+                        "). Consider increasing queue size or optimizing storage performance.");
+            }
+        }
+        
+        // Parser recommendations
+        if (optimizedParser != null) {
+            HighPerformanceMessageParser.ParsingStats parsingStats = optimizedParser.getParsingStats();
+            if (parsingStats.getAvgTimeMs() > 0.1) {
+                recommendations.add("Message parsing is slower than optimal (" + 
+                        String.format("%.3f", parsingStats.getAvgTimeMs()) + "ms avg). " +
+                        "Consider message format optimization or hardware upgrade.");
+            }
+        }
+        
         if (recommendations.isEmpty()) {
-            recommendations.add("Performance looks good! No specific optimizations needed.");
+            recommendations.add("Performance looks excellent! All optimizations are working well.");
         }
         
         return recommendations;

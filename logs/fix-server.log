@@ -1,72 +1,181 @@
-2025-09-26 10:09:34 [main] INFO  com.fixserver.FIXServerApplication - Starting FIXServerApplication using Java 1.8.0_221 on QTdeMacBook-Pro.local with PID 3130 (/Users/qt/workspace/fix-server/target/classes started by qt in /Users/qt/workspace/fix-server)
-2025-09-26 10:09:34 [main] INFO  com.fixserver.FIXServerApplication - No active profile set, falling back to 1 default profile: "default"
-2025-09-26 10:09:37 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2025-09-26 10:09:37 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2025-09-26 10:09:37 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
-2025-09-26 10:09:37 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-09-26 10:09:37 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2995 ms
-2025-09-26 10:09:37 [main] INFO  c.f.config.MessageStoreConfiguration - Creating InMemoryMessageStore - database persistence is disabled
-2025-09-26 10:09:37 [main] WARN  c.f.config.MessageStoreConfiguration - Using in-memory storage: all messages will be lost on application restart
-2025-09-26 10:09:37 [main] INFO  c.f.config.MessageStoreConfiguration - To enable database persistence, uncomment database dependencies in pom.xml and application.yml
-2025-09-26 10:09:39 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 4 endpoint(s) beneath base path '/actuator'
-2025-09-26 10:09:39 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2025-09-26 10:09:39 [main] INFO  com.fixserver.FIXServerApplication - Started FIXServerApplication in 5.811 seconds (JVM running for 6.496)
-2025-09-26 10:09:39 [main] INFO  com.fixserver.FIXServerApplication - === FIX Server Application Started Successfully ===
-2025-09-26 10:09:39 [main] INFO  com.fixserver.FIXServerApplication - Server is ready to accept FIX connections
-2025-09-26 10:09:39 [main] INFO  com.fixserver.FIXServerApplication - Monitoring endpoints available at /actuator/health
-2025-09-26 10:09:39 [main] INFO  com.fixserver.FIXServerApplication - Metrics available at /actuator/prometheus
-2025-09-26 10:09:39 [main] INFO  com.fixserver.FIXServerApplication - Application version: null
-2025-09-26 10:09:39 [main] INFO  com.fixserver.FIXServerApplication - Configuration Summary:
-2025-09-26 10:09:39 [main] INFO  com.fixserver.FIXServerApplication - - Max concurrent sessions: configurable via fix.server.max-sessions
-2025-09-26 10:09:39 [main] INFO  com.fixserver.FIXServerApplication - - TLS enabled: configurable via fix.server.tls.enabled
-2025-09-26 10:09:39 [main] INFO  com.fixserver.FIXServerApplication - - Database: PostgreSQL with connection pooling
-2025-09-26 10:09:39 [main] INFO  com.fixserver.FIXServerApplication - - Monitoring: Prometheus metrics enabled
-2025-09-26 10:09:39 [main] INFO  com.fixserver.FIXServerApplication - For detailed configuration, check application.yml
-2025-09-26 10:09:39 [main] INFO  com.fixserver.netty.NettyFIXServer - Netty FIX Server started on port 9879 with 1 boss threads and default worker threads
-2025-09-26 10:09:39 [main] INFO  com.fixserver.netty.NettyFIXServer - Server channel: [id: 0x8fab2a80, L:/0.0.0.0:9879]
-2025-09-26 10:09:39 [main] INFO  c.fixserver.server.FIXProtocolServer - FIX Protocol Server started on port 9878
-2025-09-26 10:09:39 [main] INFO  c.fixserver.server.FIXProtocolServer - Waiting for FIX client connections...
-2025-09-26 10:11:22 [nioEventLoopGroup-3-1] INFO  c.fixserver.netty.FIXMessageHandler - New FIX client connected: /127.0.0.1:50642
-2025-09-26 10:11:22 [nioEventLoopGroup-3-1] INFO  c.fixserver.netty.FIXMessageHandler - Received FIX message from /127.0.0.1:50642: BeginString=FIX.4.4 | BodyLength=68 | MsgSeqNum=1 | MsgType=A(Logon) | SenderCompID=TESTCLIENT | SendingTime=20250926-10:11:22 | TargetCompID=SERVER1 | EncryptMethod=0 | HeartBtInt=30 | CheckSum=062
-2025-09-26 10:11:22 [nioEventLoopGroup-3-1] INFO  c.fixserver.netty.FIXMessageHandler - Client /127.0.0.1:50642 logged on with session TESTCLIENT-SERVER1
-2025-09-26 10:39:38 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
-2025-09-26 10:39:38 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
-2025-09-26 10:39:38 [SpringApplicationShutdownHook] INFO  c.fixserver.server.FIXProtocolServer - Stopping FIX Protocol Server...
-2025-09-26 10:39:38 [SpringApplicationShutdownHook] INFO  c.fixserver.server.FIXProtocolServer - FIX Protocol Server stopped
-2025-09-26 10:39:38 [SpringApplicationShutdownHook] INFO  com.fixserver.netty.NettyFIXServer - Stopping Netty FIX Server...
-2025-09-26 10:39:38 [SpringApplicationShutdownHook] INFO  com.fixserver.netty.NettyFIXServer - Netty FIX Server stopped
-2025-09-26 10:39:38 [nioEventLoopGroup-3-1] INFO  c.fixserver.netty.FIXMessageHandler - FIX client disconnected: /127.0.0.1:50642
-2025-09-26 10:39:38 [nioEventLoopGroup-3-1] INFO  c.fixserver.netty.FIXMessageHandler - Cleaned up session: TESTCLIENT-SERVER1
-2025-09-26 10:41:05 [main] INFO  com.fixserver.FIXServerApplication - Starting FIXServerApplication using Java 1.8.0_221 on QTdeMacBook-Pro.local with PID 4104 (/Users/qt/workspace/fix-server/target/classes started by qt in /Users/qt/workspace/fix-server)
-2025-09-26 10:41:05 [main] INFO  com.fixserver.FIXServerApplication - No active profile set, falling back to 1 default profile: "default"
-2025-09-26 10:41:07 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2025-09-26 10:41:07 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2025-09-26 10:41:07 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
-2025-09-26 10:41:08 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-09-26 10:41:08 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2214 ms
-2025-09-26 10:41:08 [main] INFO  c.f.config.MessageStoreConfiguration - Creating InMemoryMessageStore - database persistence is disabled
-2025-09-26 10:41:08 [main] WARN  c.f.config.MessageStoreConfiguration - Using in-memory storage: all messages will be lost on application restart
-2025-09-26 10:41:08 [main] INFO  c.f.config.MessageStoreConfiguration - To enable database persistence, uncomment database dependencies in pom.xml and application.yml
-2025-09-26 10:41:09 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 4 endpoint(s) beneath base path '/actuator'
-2025-09-26 10:41:09 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2025-09-26 10:41:09 [main] INFO  com.fixserver.FIXServerApplication - Started FIXServerApplication in 4.544 seconds (JVM running for 5.36)
-2025-09-26 10:41:09 [main] INFO  com.fixserver.FIXServerApplication - === FIX Server Application Started Successfully ===
-2025-09-26 10:41:09 [main] INFO  com.fixserver.FIXServerApplication - Server is ready to accept FIX connections
-2025-09-26 10:41:09 [main] INFO  com.fixserver.FIXServerApplication - Monitoring endpoints available at /actuator/health
-2025-09-26 10:41:09 [main] INFO  com.fixserver.FIXServerApplication - Metrics available at /actuator/prometheus
-2025-09-26 10:41:09 [main] INFO  com.fixserver.FIXServerApplication - Application version: null
-2025-09-26 10:41:09 [main] INFO  com.fixserver.FIXServerApplication - Configuration Summary:
-2025-09-26 10:41:09 [main] INFO  com.fixserver.FIXServerApplication - - Max concurrent sessions: configurable via fix.server.max-sessions
-2025-09-26 10:41:09 [main] INFO  com.fixserver.FIXServerApplication - - TLS enabled: configurable via fix.server.tls.enabled
-2025-09-26 10:41:09 [main] INFO  com.fixserver.FIXServerApplication - - Database: PostgreSQL with connection pooling
-2025-09-26 10:41:09 [main] INFO  com.fixserver.FIXServerApplication - - Monitoring: Prometheus metrics enabled
-2025-09-26 10:41:09 [main] INFO  com.fixserver.FIXServerApplication - For detailed configuration, check application.yml
-2025-09-26 10:41:09 [main] INFO  com.fixserver.netty.NettyFIXServer - Netty FIX Server started on port 9879 with 1 boss threads and default worker threads
-2025-09-26 10:41:09 [main] INFO  com.fixserver.netty.NettyFIXServer - Server channel: [id: 0x8028f72c, L:/0.0.0.0:9879]
-2025-09-26 10:41:09 [main] INFO  c.fixserver.server.FIXProtocolServer - FIX Protocol Server started on port 9878
-2025-09-26 10:41:09 [main] INFO  c.fixserver.server.FIXProtocolServer - Waiting for FIX client connections...
-2025-09-26 10:41:15 [nioEventLoopGroup-3-1] INFO  c.fixserver.netty.FIXMessageHandler - New FIX client connected: /127.0.0.1:51200
-2025-09-26 10:41:15 [nioEventLoopGroup-3-1] INFO  c.fixserver.netty.FIXMessageHandler - Received FIX message from /127.0.0.1:51200: BeginString(8)=FIX.4.4 | BodyLength(9)=68 | MsgSeqNum(34)=1 | MsgType(35)=A(Logon) | SenderCompID(49)=TESTCLIENT | SendingTime(52)=20250926-10:41:15 | TargetCompID(56)=SERVER1 | EncryptMethod(98)=0(None) | HeartBtInt(108)=30 | CheckSum(10)=067
-2025-09-26 10:41:15 [nioEventLoopGroup-3-1] INFO  c.fixserver.netty.FIXMessageHandler - Client /127.0.0.1:51200 logged on with session TESTCLIENT-SERVER1
-2025-09-26 10:42:16 [nioEventLoopGroup-3-1] INFO  c.fixserver.netty.FIXMessageHandler - FIX client disconnected: /127.0.0.1:51200
-2025-09-26 10:42:16 [nioEventLoopGroup-3-1] INFO  c.fixserver.netty.FIXMessageHandler - Cleaned up session: TESTCLIENT-SERVER1
+2025-09-28 09:48:41 [main] INFO  com.fixserver.FIXServerApplication - Starting FIXServerApplication using Java 1.8.0_221 on QTdeMacBook-Pro.local with PID 1597 (/Users/qt/workspace/fix-server/target/classes started by qt in /Users/qt/workspace/fix-server)
+2025-09-28 09:48:41 [main] INFO  com.fixserver.FIXServerApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-28 09:48:42 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-09-28 09:48:42 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-28 09:48:42 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
+2025-09-28 09:48:43 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-28 09:48:43 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1613 ms
+2025-09-28 09:48:43 [main] INFO  c.f.config.MessageStoreConfiguration - Creating InMemoryMessageStore - database persistence is disabled
+2025-09-28 09:48:43 [main] WARN  c.f.config.MessageStoreConfiguration - Using in-memory storage: all messages will be lost on application restart
+2025-09-28 09:48:43 [main] INFO  c.f.config.MessageStoreConfiguration - To enable database persistence, uncomment database dependencies in pom.xml and application.yml
+2025-09-28 09:48:43 [main] INFO  c.f.performance.AsyncMessageStore - Initializing AsyncMessageStore with ring buffer size: 65536, batch size: 100
+2025-09-28 09:48:43 [main] INFO  c.f.performance.AsyncMessageStore - AsyncMessageStore initialized successfully
+2025-09-28 09:48:44 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 4 endpoint(s) beneath base path '/actuator'
+2025-09-28 09:48:44 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2025-09-28 09:48:44 [main] INFO  com.fixserver.FIXServerApplication - Started FIXServerApplication in 3.519 seconds (JVM running for 3.897)
+2025-09-28 09:48:44 [main] INFO  com.fixserver.FIXServerApplication - === FIX Server Application Started Successfully ===
+2025-09-28 09:48:44 [main] INFO  com.fixserver.FIXServerApplication - Server is ready to accept FIX connections
+2025-09-28 09:48:44 [main] INFO  com.fixserver.FIXServerApplication - Monitoring endpoints available at /actuator/health
+2025-09-28 09:48:44 [main] INFO  com.fixserver.FIXServerApplication - Metrics available at /actuator/prometheus
+2025-09-28 09:48:44 [main] INFO  com.fixserver.FIXServerApplication - Application version: null
+2025-09-28 09:48:44 [main] INFO  com.fixserver.FIXServerApplication - Configuration Summary:
+2025-09-28 09:48:44 [main] INFO  com.fixserver.FIXServerApplication - - Max concurrent sessions: configurable via fix.server.max-sessions
+2025-09-28 09:48:44 [main] INFO  com.fixserver.FIXServerApplication - - TLS enabled: configurable via fix.server.tls.enabled
+2025-09-28 09:48:44 [main] INFO  com.fixserver.FIXServerApplication - - Database: PostgreSQL with connection pooling
+2025-09-28 09:48:44 [main] INFO  com.fixserver.FIXServerApplication - - Monitoring: Prometheus metrics enabled
+2025-09-28 09:48:44 [main] INFO  com.fixserver.FIXServerApplication - For detailed configuration, check application.yml
+2025-09-28 09:48:44 [main] INFO  com.fixserver.netty.NettyFIXServer - Netty FIX Server started on port 9879 with 2 boss threads and default worker threads
+2025-09-28 09:48:44 [main] INFO  com.fixserver.netty.NettyFIXServer - Performance optimizations enabled: true
+2025-09-28 09:48:44 [main] INFO  com.fixserver.netty.NettyFIXServer - Server channel: [id: 0x4eeb5bd3, L:/0.0.0.0:9879]
+2025-09-28 09:48:44 [main] INFO  com.fixserver.netty.NettyFIXServer - JVM performance optimizations are active
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - Initializing JVM optimization configuration...
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - === JVM Information ===
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - JVM Name: Java HotSpot(TM) 64-Bit Server VM
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - JVM Version: 25.221-b11
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - JVM Vendor: Oracle Corporation
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - Java Version: 1.8.0_221
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - Java Vendor: Oracle Corporation
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - Max Memory: 1820 MB
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - Total Memory: 358 MB
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - Free Memory: 258 MB
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - Used Memory: 99 MB
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - Available Processors: 4
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - JVM Uptime: 4093 ms
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - === JVM Parameter Validation ===
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - Current JVM Arguments: [-Xverify:none, -XX:TieredStopAtLevel=1]
+2025-09-28 09:48:44 [main] WARN  c.f.p.JVMOptimizationConfig - ✗ Missing recommended parameter: -server
+2025-09-28 09:48:44 [main] WARN  c.f.p.JVMOptimizationConfig - ✗ Missing recommended parameter: -XX:+UseG1GC
+2025-09-28 09:48:44 [main] WARN  c.f.p.JVMOptimizationConfig - ✗ Missing recommended parameter: -XX:+UseStringDeduplication
+2025-09-28 09:48:44 [main] WARN  c.f.p.JVMOptimizationConfig - ✗ Missing recommended parameter: -XX:+OptimizeStringConcat
+2025-09-28 09:48:44 [main] WARN  c.f.p.JVMOptimizationConfig - ✗ Missing recommended parameter: -XX:+UseFastAccessorMethods
+2025-09-28 09:48:44 [main] WARN  c.f.p.JVMOptimizationConfig - ✗ Missing recommended parameter: -XX:+UseCompressedOops
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - ○ Optional performance parameter not set: -XX:+AggressiveOpts
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - ○ Optional performance parameter not set: -XX:+UseBiasedLocking
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - ○ Optional performance parameter not set: -XX:+DoEscapeAnalysis
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - ○ Optional performance parameter not set: -XX:+EliminateAllocations
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - ○ Optional performance parameter not set: -XX:+UseFastJNIAccessors
+2025-09-28 09:48:44 [main] WARN  c.f.p.JVMOptimizationConfig - No explicit GC specified - JVM will use default
+2025-09-28 09:48:44 [main] WARN  c.f.p.JVMOptimizationConfig - Consider setting Xms equal to Xmx to avoid dynamic heap expansion
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - ✓ Heap size looks reasonable: 1820 MB
+2025-09-28 09:48:44 [main] WARN  c.f.p.JVMOptimizationConfig - Not explicitly running in server mode - add -server flag
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - Consider enabling tiered compilation for better startup performance
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - === Configuring Runtime Optimizations ===
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - Runtime optimizations configured
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - Starting JVM performance monitoring...
+2025-09-28 09:48:44 [main] INFO  c.f.p.JVMOptimizationConfig - JVM optimization configuration completed
+2025-09-28 09:48:44 [main] INFO  c.fixserver.server.FIXProtocolServer - FIX Protocol Server started on port 9878
+2025-09-28 09:48:44 [main] INFO  c.fixserver.server.FIXProtocolServer - Waiting for FIX client connections...
+2025-09-28 09:48:51 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-09-28 09:48:51 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-09-28 09:48:52 [SpringApplicationShutdownHook] INFO  c.fixserver.server.FIXProtocolServer - Stopping FIX Protocol Server...
+2025-09-28 09:48:52 [SpringApplicationShutdownHook] INFO  c.fixserver.server.FIXProtocolServer - FIX Protocol Server stopped
+2025-09-28 09:48:52 [SpringApplicationShutdownHook] INFO  c.f.performance.AsyncMessageStore - Shutting down AsyncMessageStore...
+2025-09-28 09:48:52 [SpringApplicationShutdownHook] INFO  c.f.performance.AsyncMessageStore - AsyncMessageStore shutdown completed
+2025-09-28 09:48:52 [SpringApplicationShutdownHook] INFO  com.fixserver.netty.NettyFIXServer - Stopping Netty FIX Server...
+2025-09-28 09:48:52 [SpringApplicationShutdownHook] INFO  com.fixserver.netty.NettyFIXServer - Netty FIX Server stopped
+2025-09-28 09:49:19 [main] INFO  com.fixserver.FIXServerApplication - Starting FIXServerApplication using Java 1.8.0_221 on QTdeMacBook-Pro.local with PID 1704 (/Users/qt/workspace/fix-server/target/classes started by qt in /Users/qt/workspace/fix-server)
+2025-09-28 09:49:19 [main] INFO  com.fixserver.FIXServerApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-28 09:49:20 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-09-28 09:49:20 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-28 09:49:20 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
+2025-09-28 09:49:20 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-28 09:49:20 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1257 ms
+2025-09-28 09:49:21 [main] INFO  c.f.config.MessageStoreConfiguration - Creating InMemoryMessageStore - database persistence is disabled
+2025-09-28 09:49:21 [main] WARN  c.f.config.MessageStoreConfiguration - Using in-memory storage: all messages will be lost on application restart
+2025-09-28 09:49:21 [main] INFO  c.f.config.MessageStoreConfiguration - To enable database persistence, uncomment database dependencies in pom.xml and application.yml
+2025-09-28 09:49:21 [main] INFO  c.f.performance.AsyncMessageStore - Initializing AsyncMessageStore with ring buffer size: 65536, batch size: 100
+2025-09-28 09:49:21 [main] INFO  c.f.performance.AsyncMessageStore - AsyncMessageStore initialized successfully
+2025-09-28 09:49:21 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 4 endpoint(s) beneath base path '/actuator'
+2025-09-28 09:49:21 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2025-09-28 09:49:21 [main] INFO  com.fixserver.FIXServerApplication - Started FIXServerApplication in 2.522 seconds (JVM running for 2.848)
+2025-09-28 09:49:21 [main] INFO  com.fixserver.FIXServerApplication - === FIX Server Application Started Successfully ===
+2025-09-28 09:49:21 [main] INFO  com.fixserver.FIXServerApplication - Server is ready to accept FIX connections
+2025-09-28 09:49:21 [main] INFO  com.fixserver.FIXServerApplication - Monitoring endpoints available at /actuator/health
+2025-09-28 09:49:21 [main] INFO  com.fixserver.FIXServerApplication - Metrics available at /actuator/prometheus
+2025-09-28 09:49:21 [main] INFO  com.fixserver.FIXServerApplication - Application version: null
+2025-09-28 09:49:21 [main] INFO  com.fixserver.FIXServerApplication - Configuration Summary:
+2025-09-28 09:49:21 [main] INFO  com.fixserver.FIXServerApplication - - Max concurrent sessions: configurable via fix.server.max-sessions
+2025-09-28 09:49:21 [main] INFO  com.fixserver.FIXServerApplication - - TLS enabled: configurable via fix.server.tls.enabled
+2025-09-28 09:49:21 [main] INFO  com.fixserver.FIXServerApplication - - Database: PostgreSQL with connection pooling
+2025-09-28 09:49:21 [main] INFO  com.fixserver.FIXServerApplication - - Monitoring: Prometheus metrics enabled
+2025-09-28 09:49:21 [main] INFO  com.fixserver.FIXServerApplication - For detailed configuration, check application.yml
+2025-09-28 09:49:21 [main] INFO  com.fixserver.netty.NettyFIXServer - Netty FIX Server started on port 9879 with 2 boss threads and default worker threads
+2025-09-28 09:49:21 [main] INFO  com.fixserver.netty.NettyFIXServer - Performance optimizations enabled: true
+2025-09-28 09:49:21 [main] INFO  com.fixserver.netty.NettyFIXServer - Server channel: [id: 0x2109b242, L:/0.0.0.0:9879]
+2025-09-28 09:49:21 [main] INFO  com.fixserver.netty.NettyFIXServer - JVM performance optimizations are active
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - Initializing JVM optimization configuration...
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - === JVM Information ===
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - JVM Name: Java HotSpot(TM) 64-Bit Server VM
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - JVM Version: 25.221-b11
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - JVM Vendor: Oracle Corporation
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - Java Version: 1.8.0_221
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - Java Vendor: Oracle Corporation
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - Max Memory: 1820 MB
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - Total Memory: 365 MB
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - Free Memory: 291 MB
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - Used Memory: 74 MB
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - Available Processors: 4
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - JVM Uptime: 2971 ms
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - === JVM Parameter Validation ===
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - Current JVM Arguments: [-Xverify:none, -XX:TieredStopAtLevel=1]
+2025-09-28 09:49:21 [main] WARN  c.f.p.JVMOptimizationConfig - ✗ Missing recommended parameter: -server
+2025-09-28 09:49:21 [main] WARN  c.f.p.JVMOptimizationConfig - ✗ Missing recommended parameter: -XX:+UseG1GC
+2025-09-28 09:49:21 [main] WARN  c.f.p.JVMOptimizationConfig - ✗ Missing recommended parameter: -XX:+UseStringDeduplication
+2025-09-28 09:49:21 [main] WARN  c.f.p.JVMOptimizationConfig - ✗ Missing recommended parameter: -XX:+OptimizeStringConcat
+2025-09-28 09:49:21 [main] WARN  c.f.p.JVMOptimizationConfig - ✗ Missing recommended parameter: -XX:+UseFastAccessorMethods
+2025-09-28 09:49:21 [main] WARN  c.f.p.JVMOptimizationConfig - ✗ Missing recommended parameter: -XX:+UseCompressedOops
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - ○ Optional performance parameter not set: -XX:+AggressiveOpts
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - ○ Optional performance parameter not set: -XX:+UseBiasedLocking
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - ○ Optional performance parameter not set: -XX:+DoEscapeAnalysis
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - ○ Optional performance parameter not set: -XX:+EliminateAllocations
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - ○ Optional performance parameter not set: -XX:+UseFastJNIAccessors
+2025-09-28 09:49:21 [main] WARN  c.f.p.JVMOptimizationConfig - No explicit GC specified - JVM will use default
+2025-09-28 09:49:21 [main] WARN  c.f.p.JVMOptimizationConfig - Consider setting Xms equal to Xmx to avoid dynamic heap expansion
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - ✓ Heap size looks reasonable: 1820 MB
+2025-09-28 09:49:21 [main] WARN  c.f.p.JVMOptimizationConfig - Not explicitly running in server mode - add -server flag
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - Consider enabling tiered compilation for better startup performance
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - === Configuring Runtime Optimizations ===
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - Runtime optimizations configured
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - Starting JVM performance monitoring...
+2025-09-28 09:49:21 [main] INFO  c.f.p.JVMOptimizationConfig - JVM optimization configuration completed
+2025-09-28 09:49:21 [main] INFO  c.fixserver.server.FIXProtocolServer - FIX Protocol Server started on port 9878
+2025-09-28 09:49:21 [main] INFO  c.fixserver.server.FIXProtocolServer - Waiting for FIX client connections...
+2025-09-28 09:50:21 [pool-4-thread-1] INFO  c.f.p.JVMOptimizationConfig - === JVM Performance Metrics ===
+2025-09-28 09:50:21 [pool-4-thread-1] INFO  c.f.p.JVMOptimizationConfig - Memory Usage: {:.1f}% (4.419967873480843 MB / 80 MB)
+2025-09-28 09:50:21 [pool-4-thread-1] INFO  c.f.p.JVMOptimizationConfig - GC Count: 9, GC Time: 201 ms
+2025-09-28 09:50:21 [pool-4-thread-1] INFO  c.f.p.JVMOptimizationConfig - Thread Count: 24 (Peak: 24)
+2025-09-28 09:50:21 [pool-4-thread-1] INFO  c.f.p.JVMOptimizationConfig - Uptime: 1 minutes
+2025-09-28 09:54:23 [main] INFO  com.fixserver.FIXServerApplication - Starting FIXServerApplication using Java 1.8.0_221 on QTdeMacBook-Pro.local with PID 2054 (/Users/qt/workspace/fix-server/target/classes started by qt in /Users/qt/workspace/fix-server)
+2025-09-28 09:54:23 [main] INFO  com.fixserver.FIXServerApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-28 09:54:24 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-09-28 09:54:24 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-28 09:54:24 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
+2025-09-28 09:54:25 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-28 09:54:25 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1549 ms
+2025-09-28 09:54:25 [main] INFO  c.f.config.MessageStoreConfiguration - Creating InMemoryMessageStore - database persistence is disabled
+2025-09-28 09:54:25 [main] WARN  c.f.config.MessageStoreConfiguration - Using in-memory storage: all messages will be lost on application restart
+2025-09-28 09:54:25 [main] INFO  c.f.config.MessageStoreConfiguration - To enable database persistence, uncomment database dependencies in pom.xml and application.yml
+2025-09-28 09:54:25 [main] INFO  c.f.performance.AsyncMessageStore - Initializing AsyncMessageStore with ring buffer size: 65536, batch size: 100
+2025-09-28 09:54:25 [main] INFO  c.f.performance.AsyncMessageStore - AsyncMessageStore initialized successfully
+2025-09-28 09:54:26 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 4 endpoint(s) beneath base path '/actuator'
+2025-09-28 09:54:27 [main] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'; nested exception is org.springframework.boot.web.server.PortInUseException: Port 8080 is already in use
+2025-09-28 09:54:27 [main] INFO  c.f.performance.AsyncMessageStore - Shutting down AsyncMessageStore...
+2025-09-28 09:54:27 [main] INFO  c.f.performance.AsyncMessageStore - AsyncMessageStore shutdown completed
+2025-09-28 09:54:27 [main] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2025-09-28 09:54:27 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLoggingListener - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2025-09-28 09:54:27 [main] ERROR o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+

@@ -64,26 +64,42 @@ logging:
 fix:
   server:
     port: 9878
-    max-sessions: 1000
+    max-sessions: 10000  # Increased for high performance
     heartbeat-interval: 30
     session-timeout: 120
-    message-buffer-size: 8192
+    message-buffer-size: 16384  # Increased buffer size
+    
+    # Performance optimizations
+    performance:
+      enabled: true
+      use-optimized-parser: true
+      use-async-storage: true
+      object-pooling-enabled: true
+      batch-processing-enabled: true
+      ring-buffer-size: 65536
+      batch-size: 100
+      flush-interval-ms: 50  # Faster flush for lower latency
     
     # Netty-based server configuration
     netty:
       enabled: true
       port: 9879
-      boss-threads: 1
+      boss-threads: 2  # Increased for better connection handling
       worker-threads: 0  # 0 = use default (2 * CPU cores)
-      backlog: 128
-      receive-buffer-size: 32768  # 32KB
-      send-buffer-size: 32768     # 32KB
+      backlog: 1024  # Increased backlog
+      receive-buffer-size: 65536  # 64KB - increased for better throughput
+      send-buffer-size: 65536     # 64KB - increased for better throughput
       keep-alive: true
       tcp-no-delay: true
       reuse-address: true
       session-timeout-seconds: 300    # 5 minutes
       heartbeat-interval-seconds: 30
-      max-sessions: 1000
+      max-sessions: 10000  # Increased capacity
+      # Performance optimizations
+      direct-memory: true
+      pooled-allocator: true
+      write-spin-count: 16
+      connect-timeout-millis: 5000
     
   tls:
     enabled: true

@@ -1,7 +1,13 @@
 package com.fixserver.netty;
 
 import com.fixserver.protocol.FIXProtocolHandler;
+import com.fixserver.performance.OptimizedNettyDecoder;
+import com.fixserver.performance.HighPerformanceMessageParser;
+import com.fixserver.performance.JVMOptimizationConfig;
+import com.fixserver.config.NettyConfiguration;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.buffer.UnpooledByteBufAllocator;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -53,6 +59,18 @@ public class NettyFIXServer {
     @Autowired
     private FIXProtocolHandler protocolHandler;
 
+    @Autowired
+    private HighPerformanceMessageParser highPerformanceParser;
+
+    @Autowired
+    private JVMOptimizationConfig jvmOptimizationConfig;
+
+    @Autowired
+    private NettyConfiguration nettyConfig;
+
+    @Value("${fix.server.performance.enabled:true}")
+    private boolean performanceOptimizationsEnabled;
+
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
     private Channel serverChannel;
@@ -86,20 +104,45 @@ public class NettyFIXServer {
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ChannelPipeline pipeline = ch.pipeline();
 
-                            // Add FIX message decoder/encoder
-                            pipeline.addLast("fixDecoder", new FIXMessageDecoder());
+                            // Add FIX message decoder/encoder - use optimized version if enabled
+                            if (performanceOptimizationsEnabled) {
+                                pipeline.addLast("fixDecoder", new OptimizedNettyDecoder());
+                                log.debug("Using OptimizedNettyDecoder for high performance");
+                            } else {
+                                pipeline.addLast("fixDecoder", new FIXMessageDecoder());
+                                log.debug("Using standard FIXMessageDecoder");
+                            }
                             pipeline.addLast("fixEncoder", new FIXMessageEncoder());
 
                             // Add FIX message handler
                             pipeline.addLast("fixHandler", new FIXMessageHandler(protocolHandler));
                         }
                     })
-                    .option(ChannelOption.SO_BACKLOG, 128)
-                    .option(ChannelOption.SO_REUSEADDR, true)
-                    .childOption(ChannelOption.SO_KEEPALIVE, true)
-                    .childOption(ChannelOption.TCP_NODELAY, true)
-                    .childOption(ChannelOption.SO_RCVBUF, 32 * 1024)
-                    .childOption(ChannelOption.SO_SNDBUF, 32 * 1024);
+                    .option(ChannelOption.SO_BACKLOG, nettyConfig.getBacklog())
+                    .option(ChannelOption.SO_REUSEADDR, nettyConfig.isReuseAddress())
+                    .childOption(ChannelOption.SO_KEEPALIVE, nettyConfig.isKeepAlive())
+                    .childOption(ChannelOption.TCP_NODELAY, nettyConfig.isTcpNoDelay())
+                    .childOption(ChannelOption.SO_RCVBUF, nettyConfig.getReceiveBufferSize())
+                    .childOption(ChannelOption.SO_SNDBUF, nettyConfig.getSendBufferSize())
+                    .childOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, nettyConfig.getConnectTimeoutMillis())
+                    .childOption(ChannelOption.WRITE_SPIN_COUNT, nettyConfig.getWriteSpinCount());
+
+            // Apply performance optimizations
+            if (performanceOptimizationsEnabled) {
+                if (nettyConfig.isPooledAllocator()) {
+                    bootstrap.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+                    bootstrap.childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+                    log.debug("Using PooledByteBufAllocator for better memory management");
+                } else {
+                    bootstrap.option(ChannelOption.ALLOCATOR, UnpooledByteBufAllocator.DEFAULT);
+                    bootstrap.childOption(ChannelOption.ALLOCATOR, UnpooledByteBufAllocator.DEFAULT);
+                }
+                
+                // Additional performance options
+                bootstrap.childOption(ChannelOption.WRITE_BUFFER_WATER_MARK, 
+                    new WriteBufferWaterMark(32 * 1024, 64 * 1024));
+                log.debug("Applied performance optimizations to Netty bootstrap");
+            }
 
             // Bind and start to accept incoming connections
             ChannelFuture future = bootstrap.bind(nettyPort).sync();
@@ -108,7 +151,13 @@ public class NettyFIXServer {
 
             log.info("Netty FIX Server started on port {} with {} boss threads and {} worker threads",
                     nettyPort, bossThreads, workerThreads == 0 ? "default" : workerThreads);
+            log.info("Performance optimizations enabled: {}", performanceOptimizationsEnabled);
             log.info("Server channel: {}", serverChannel);
+            
+            // JVM optimizations are applied automatically via @EventListener
+            if (performanceOptimizationsEnabled && jvmOptimizationConfig != null) {
+                log.info("JVM performance optimizations are active");
+            }
 
         } catch (Exception e) {
             log.error("Failed to start Netty FIX Server on port {}", nettyPort, e);

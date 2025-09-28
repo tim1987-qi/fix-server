@@ -5,10 +5,14 @@ import com.fixserver.core.FIXMessageImpl;
 import com.fixserver.protocol.FIXProtocolHandler;
 import com.fixserver.protocol.FIXTags;
 import com.fixserver.performance.PerformanceOptimizer;
+import com.fixserver.performance.HighPerformanceMessageParser;
+import com.fixserver.performance.OptimizedFIXMessage;
+import com.fixserver.performance.AsyncMessageStore;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,6 +37,15 @@ public class FIXMessageHandler extends SimpleChannelInboundHandler<String> {
     
     @Autowired
     private PerformanceOptimizer performanceOptimizer;
+    
+    @Autowired
+    private HighPerformanceMessageParser highPerformanceParser;
+    
+    @Autowired
+    private AsyncMessageStore asyncMessageStore;
+    
+    @Value("${fix.server.performance.enabled:true}")
+    private boolean performanceOptimizationsEnabled;
     
     public FIXMessageHandler(FIXProtocolHandler protocolHandler) {
         this.protocolHandler = protocolHandler;
@@ -77,8 +90,15 @@ public class FIXMessageHandler extends SimpleChannelInboundHandler<String> {
         log.debug("Received raw message from {}: {}", clientAddress, FIXTags.formatForLogging(rawMessage));
         
         try {
-            // Parse the FIX message
-            FIXMessage message = protocolHandler.parse(rawMessage);
+            // Parse the FIX message using optimized parser if available
+            FIXMessage message;
+            if (performanceOptimizationsEnabled && highPerformanceParser != null) {
+                message = highPerformanceParser.parseFromString(rawMessage);
+                log.debug("Parsed message using HighPerformanceMessageParser");
+            } else {
+                message = protocolHandler.parse(rawMessage);
+                log.debug("Parsed message using standard FIXProtocolHandler");
+            }
             log.info("Received FIX message from {}: {}", clientAddress, message.toReadableString());
             
             // Get or create session
@@ -107,6 +127,12 @@ public class FIXMessageHandler extends SimpleChannelInboundHandler<String> {
                 default:
                     handleUnsupportedMessage(message, session, ctx);
                     break;
+            }
+            
+            // Store message asynchronously if enabled
+            if (performanceOptimizationsEnabled && asyncMessageStore != null) {
+                asyncMessageStore.storeMessage(session.getSessionId(), message, 
+                com.fixserver.store.MessageStore.MessageDirection.INCOMING);
             }
             
             // Record performance metrics

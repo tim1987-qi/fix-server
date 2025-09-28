@@ -135,7 +135,7 @@ fix-server/
 
 ## 🎯 Next Steps
 
-1. **Development**: Use `./run.sh maven` for development
+1. **Development**: Use `./run.sh maven` for development=
 2. **Testing**: Run `./mvnw test` for unit tests
 3. **Production**: Use Docker deployment with `docker-compose up`
 4. **Monitoring**: Access Grafana at http://localhost:3000 (admin/admin)

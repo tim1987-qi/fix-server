@@ -85,4 +85,24 @@ public class NettyConfiguration {
      * Maximum number of concurrent sessions.
      */
     private int maxSessions = 1000;
+    
+    /**
+     * Whether to use direct memory for better performance.
+     */
+    private boolean directMemory = true;
+    
+    /**
+     * Whether to use pooled ByteBuf allocator.
+     */
+    private boolean pooledAllocator = true;
+    
+    /**
+     * Write spin count for better write performance.
+     */
+    private int writeSpinCount = 16;
+    
+    /**
+     * Connection timeout in milliseconds.
+     */
+    private int connectTimeoutMillis = 5000;
 }

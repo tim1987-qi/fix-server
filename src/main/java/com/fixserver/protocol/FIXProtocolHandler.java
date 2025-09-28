@@ -2,6 +2,10 @@ package com.fixserver.protocol;
 
 import com.fixserver.core.FIXMessage;
 import com.fixserver.core.FIXMessageImpl;
+import com.fixserver.performance.HighPerformanceMessageParser;
+import com.fixserver.performance.OptimizedFIXMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,6 +21,12 @@ public class FIXProtocolHandler {
     private static final String FIELD_SEPARATOR = "\u0001"; // SOH character
     private static final Pattern FIX_MESSAGE_PATTERN = Pattern.compile("8=FIX\\.[0-9]\\.[0-9].*10=[0-9]{3}" + FIELD_SEPARATOR);
     
+    @Autowired(required = false)
+    private HighPerformanceMessageParser highPerformanceParser;
+    
+    @Value("${fix.server.performance.enabled:true}")
+    private boolean performanceOptimizationsEnabled;
+    
     /**
      * Parse a raw FIX message string into a FIXMessage object
      */
@@ -26,6 +36,15 @@ public class FIXProtocolHandler {
         }
         
         log.debug("Parsing FIX message: {}", sanitizeForLogging(rawMessage));
+        
+        // Use high-performance parser if available and enabled
+        if (performanceOptimizationsEnabled && highPerformanceParser != null) {
+            try {
+                return highPerformanceParser.parseFromString(rawMessage);
+            } catch (Exception e) {
+                log.warn("High-performance parser failed, falling back to standard parser: {}", e.getMessage());
+            }
+        }
         
         try {
             FIXMessageImpl message = new FIXMessageImpl();
