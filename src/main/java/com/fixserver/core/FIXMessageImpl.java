@@ -199,6 +199,8 @@ public class FIXMessageImpl implements FIXMessage {
         
         // Step 6: Calculate and add checksum (must be last field)
         String checksum = calculateChecksum(sb.toString());
+        // Store checksum in fields so getChecksum() can retrieve it
+        fields.put(CHECKSUM, checksum);
         sb.append(CHECKSUM).append("=").append(checksum).append(FIELD_SEPARATOR);
         
         return sb.toString();

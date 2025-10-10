@@ -24,7 +24,7 @@ public class FIXProtocolHandler {
     @Autowired(required = false)
     private HighPerformanceMessageParser highPerformanceParser;
     
-    @Value("${fix.server.performance.enabled:true}")
+    @Value("${fix.server.performance.enabled:false}")
     private boolean performanceOptimizationsEnabled;
     
     /**
@@ -37,12 +37,13 @@ public class FIXProtocolHandler {
         
         log.debug("Parsing FIX message: {}", sanitizeForLogging(rawMessage));
         
-        // Use high-performance parser if available and enabled
+        // Use high-performance parser if available and explicitly enabled
         if (performanceOptimizationsEnabled && highPerformanceParser != null) {
             try {
                 return highPerformanceParser.parseFromString(rawMessage);
             } catch (Exception e) {
                 log.warn("High-performance parser failed, falling back to standard parser: {}", e.getMessage());
+                // Fall through to standard parser
             }
         }
         

@@ -100,12 +100,13 @@ class FIXMessageImplTest {
         String fixString = message.toFixString();
         
         assertNotNull(fixString);
-        assertTrue(fixString.startsWith("8=FIX.4.4\u0001"));
-        assertTrue(fixString.contains("35=D\u0001"));
-        assertTrue(fixString.contains("49=SENDER\u0001"));
-        assertTrue(fixString.contains("56=TARGET\u0001"));
-        assertTrue(fixString.contains("34=1\u0001"));
-        assertTrue(fixString.endsWith("10="));
+        assertTrue(fixString.startsWith("8=FIX.4.4\u0001"), "Should start with BeginString");
+        assertTrue(fixString.contains("35=D\u0001"), "Should contain MessageType");
+        assertTrue(fixString.contains("49=SENDER\u0001"), "Should contain SenderCompID");
+        assertTrue(fixString.contains("56=TARGET\u0001"), "Should contain TargetCompID");
+        assertTrue(fixString.contains("34=1\u0001"), "Should contain MsgSeqNum");
+        assertTrue(fixString.contains("10="), "Should contain checksum field");
+        assertTrue(fixString.endsWith("\u0001"), "Should end with SOH");
     }
     
     @Test
@@ -113,9 +114,9 @@ class FIXMessageImplTest {
         String fixString = message.toFixString();
         String checksum = message.getChecksum();
         
-        assertNotNull(checksum);
-        assertEquals(3, checksum.length());
-        assertTrue(fixString.contains("10=" + checksum));
+        assertNotNull(checksum, "Checksum should not be null after toFixString()");
+        assertEquals(3, checksum.length(), "Checksum should be 3 digits");
+        assertTrue(fixString.contains("10=" + checksum), "FIX string should contain the checksum");
     }
     
     @Test

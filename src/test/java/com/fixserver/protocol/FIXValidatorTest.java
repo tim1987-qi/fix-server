@@ -18,12 +18,21 @@ class FIXValidatorTest {
         message.setField(FIXMessage.SENDER_COMP_ID, "SENDER");
         message.setField(FIXMessage.TARGET_COMP_ID, "TARGET");
         message.setField(FIXMessage.MESSAGE_SEQUENCE_NUMBER, "1");
+        // SendingTime is automatically set by FIXMessageImpl constructor
+        
+        // Add required fields for New Order Single (message type D)
+        message.setField(11, "ORDER123"); // ClOrdID
+        message.setField(55, "AAPL"); // Symbol
+        message.setField(54, "1"); // Side
+        message.setField(38, "100"); // OrderQty
+        message.setField(40, "2"); // OrdType
     }
     
     @Test
     void testValidMessage() {
+        // Message should be valid with all required fields set
         FIXValidator.ValidationResult result = validator.validateMessage(message);
-        assertTrue(result.isValid());
+        assertTrue(result.isValid(), "Message should be valid: " + result.getErrors());
         assertTrue(result.getErrors().isEmpty());
     }
     
@@ -87,9 +96,13 @@ class FIXValidatorTest {
     
     @Test
     void testNewOrderSingleValidation() {
-        message.setField(FIXMessage.MESSAGE_TYPE, "D"); // New Order Single
+        // Create a new message without the order fields
+        FIXMessageImpl orderMessage = new FIXMessageImpl("FIX.4.4", "D");
+        orderMessage.setField(FIXMessage.SENDER_COMP_ID, "SENDER");
+        orderMessage.setField(FIXMessage.TARGET_COMP_ID, "TARGET");
+        orderMessage.setField(FIXMessage.MESSAGE_SEQUENCE_NUMBER, "1");
         
-        FIXValidator.ValidationResult result = validator.validateMessage(message);
+        FIXValidator.ValidationResult result = validator.validateMessage(orderMessage);
         assertFalse(result.isValid());
         
         // Should require order-specific fields
@@ -100,13 +113,13 @@ class FIXValidatorTest {
         assertTrue(result.getErrors().stream().anyMatch(e -> e.contains("OrdType")));
         
         // Add required fields
-        message.setField(11, "ORDER123"); // ClOrdID
-        message.setField(55, "AAPL"); // Symbol
-        message.setField(54, "1"); // Side
-        message.setField(38, "100"); // OrderQty
-        message.setField(40, "2"); // OrdType
+        orderMessage.setField(11, "ORDER123"); // ClOrdID
+        orderMessage.setField(55, "AAPL"); // Symbol
+        orderMessage.setField(54, "1"); // Side
+        orderMessage.setField(38, "100"); // OrderQty
+        orderMessage.setField(40, "2"); // OrdType
         
-        result = validator.validateMessage(message);
+        result = validator.validateMessage(orderMessage);
         assertTrue(result.isValid());
     }
     
@@ -154,21 +167,21 @@ class FIXValidatorTest {
         // Test boolean field
         message.setField(123, "Y"); // Valid boolean
         FIXValidator.ValidationResult result = validator.validateMessage(message);
-        assertTrue(result.isValid());
+        assertTrue(result.isValid(), "Message with valid boolean should be valid: " + result.getErrors());
         
         message.setField(123, "INVALID"); // Invalid boolean
         result = validator.validateMessage(message);
-        assertFalse(result.isValid());
+        assertFalse(result.isValid(), "Message with invalid boolean should be invalid");
         
         // Test integer field
         message.setField(108, "30"); // Valid integer
         message.setField(123, "Y"); // Fix the boolean field
         result = validator.validateMessage(message);
-        assertTrue(result.isValid());
+        assertTrue(result.isValid(), "Message with valid integer should be valid: " + result.getErrors());
         
         message.setField(108, "NOT_NUMBER"); // Invalid integer
         result = validator.validateMessage(message);
-        assertFalse(result.isValid());
+        assertFalse(result.isValid(), "Message with invalid integer should be invalid");
     }
     
     @Test

@@ -18,8 +18,19 @@ class FIXProtocolHandlerTest {
     
     @Test
     void testParseValidMessage() {
-        String rawMessage = "8=FIX.4.4" + SOH + "35=D" + SOH + "49=SENDER" + SOH + 
-                           "56=TARGET" + SOH + "34=1" + SOH + "52=20231201-10:30:00" + SOH + "10=123" + SOH;
+        // Build message without checksum first
+        String messageWithoutChecksum = "8=FIX.4.4" + SOH + "35=D" + SOH + "49=SENDER" + SOH + 
+                           "56=TARGET" + SOH + "34=1" + SOH + "52=20231201-10:30:00" + SOH;
+        
+        // Calculate correct checksum
+        int sum = 0;
+        for (char c : messageWithoutChecksum.toCharArray()) {
+            sum += c;
+        }
+        String checksum = String.format("%03d", sum % 256);
+        
+        // Build complete message with correct checksum
+        String rawMessage = messageWithoutChecksum + "10=" + checksum + SOH;
         
         FIXMessage message = handler.parse(rawMessage);
         
