@@ -21,8 +21,9 @@ This directory contains comprehensive documentation for the FIX Server, an enter
 - **[Security Guide](operations/SECURITY.md)** - Security configuration and best practices
 
 ## 📊 Performance
-- **[Performance Guide](performance/PERFORMANCE_GUIDE.md)** - Complete performance documentation
-- **[Benchmark Results](performance/RESULTS.md)** - Actual performance test results
+- **[Performance Guide](performance/PERFORMANCE_GUIDE.md)** - Complete performance documentation (59.6μs latency)
+- **[Benchmark Results](performance/RESULTS.md)** - Actual performance test results (2-262x improvements)
+- **[SBE Implementation Guide](performance/SBE_IMPLEMENTATION_GUIDE.md)** - Ultra-low latency path (0.5-2μs target)
 - **[Tuning Guide](performance/TUNING.md)** - Performance tuning recommendations
 
 ## 👥 Client Integration
